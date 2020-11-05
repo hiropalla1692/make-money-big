@@ -1,4 +1,5 @@
 import React, {useState, useEffect } from 'react';
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import styled, {css} from 'styled-components';
 
 const Container = styled.div`
@@ -21,11 +22,21 @@ const MenuBar = () => {
   return (
     <Container>
       <Navigator>
-        <ul>Valuation</ul>
-        <ul>Profitability</ul>
-        <ul>Income Statement </ul>
-        <ul>Balance Sheet</ul>
-        <ul>CashFlow</ul>
+        <ul>
+          <Link to="/val">Valuation</Link>
+        </ul>
+        <ul>
+          <Link to="/profit">Profitability</Link>
+        </ul>
+        <ul>
+          <Link to="/">Income Statement</Link>
+        </ul>
+        <ul>
+          <Link to="/bs">Balance Sheet</Link>
+        </ul>
+        <ul>
+          <Link to="/cs">Cash Flow Statement</Link>
+        </ul>
       </Navigator>
     </Container>
   )

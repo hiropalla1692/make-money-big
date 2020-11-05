@@ -6,7 +6,7 @@ const Container = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 1% 4%;
-  background-color: #3b404b;
+  background-color: #2f9584;
   font-family: 'Poppins', sans-serif;
   color: white;
   h5 {

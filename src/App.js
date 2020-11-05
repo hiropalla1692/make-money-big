@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import Chart from './components/Chart';
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
+import IncomeStatement from './components/IncomeStatement';
 import Header from './components/Header';
 import MenuBar from './components/MenuBar';
 import { fetchData } from './api';
@@ -55,20 +56,55 @@ class App extends React.Component {
   const { stockInfo } = this.state;
   return (
       <Container>
-        <Header/>
-        <input type="text" placeholder="search symbol" value={this.state.value} onChange={this.handleChange}/>
-        <button onClick={this.searchSymbol}>search</button>
-        <SplitPane split="vertical" minSize={50} defaultSize={"20%"} style={ {overflow: "auto"} }>
-          <Pane style={ {position: "fixed"} }>
-            <MenuBar/>
-          </Pane>
-          <Contents>
-            <Chart stockInfo={stockInfo} />
-          </Contents>
-        </SplitPane>
+        <BrowserRouter>
+          <Header/>
+          <input type="text" placeholder="search symbol" value={this.state.value} onChange={this.handleChange}/>
+          <button onClick={this.searchSymbol}>search</button>
+          <SplitPane split="vertical" minSize={50} defaultSize={"20%"} style={ {overflow: "auto"} }>
+            <Pane style={ {position: "fixed"} }>
+              <MenuBar/>
+            </Pane>
+            <Contents>
+              <Switch>
+                <Route path="/val">
+                  <Valuation />
+                </Route>
+                <Route path="/profit">
+                  <Profitability />
+                </Route>
+                <Route path="/" exact >
+                  <IncomeStatement stockInfo={stockInfo} />
+                </Route>
+                <Route path="/bs" >
+                  <BalanceSheet/>
+                </Route>
+                <Route path="/cs" >
+                  <CashFlowStatement/>
+                </Route>
+              </Switch>
+            </Contents>
+          </SplitPane>
+        </BrowserRouter>
       </Container>
   )}
 };
+
+function Valuation() {
+  return <h2>Valuationだよ</h2>;
+}
+
+function Profitability() {
+  return <h2>Profitabilityだよ</h2>;
+}
+
+function BalanceSheet() {
+  return <h2>B/Sだよ</h2>;
+}
+
+function CashFlowStatement() {
+  return <h2>C/Sだよ</h2>;
+}
+
 
 
 
