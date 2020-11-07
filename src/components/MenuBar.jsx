@@ -21,6 +21,7 @@ const Navigator = styled.nav`
 const MenuBar = () => {
   return (
     <Container>
+      <p>MakeMoneyBig.</p>
       <Navigator>
         <ul>
           <Link to="/val">Valuation</Link>

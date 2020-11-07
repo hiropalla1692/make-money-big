@@ -1,11 +1,11 @@
 body {
-  background-color: #282c34;
+  background-color: #313896;
 }
 
 .App {
   text-align: center;
   position: relative;
-  background-color: #282c34;
+  background-color: #313896;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

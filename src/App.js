@@ -12,7 +12,7 @@ import './App.css';
 
 const Container = styled.div`
   text-align: center;
-  background-color: #282c34;
+  background-color: #313896;
   min-height: 100vh;
   /* display: flex;
   flex-direction: column;
@@ -29,6 +29,7 @@ const Container = styled.div`
 
 const Contents = styled.div`
   display: flex;
+  background-color: #eeeff7;
 `
 
 class App extends React.Component {
@@ -58,11 +59,10 @@ class App extends React.Component {
   return (
       <Container>
         <BrowserRouter>
-          <Header/>
-          <input type="text" placeholder="search symbol" value={this.state.value} onChange={this.handleChange}/>
-          <button onClick={this.searchSymbol}>search</button>
           <SplitPane split="vertical" minSize={50} defaultSize={"20%"} style={ {overflow: "auto"} }>
-            <Pane style={ {position: "fixed"} }>
+            <Pane pane1Style={{position: "fixed",backgroundcolor: "red"}}>
+              <input type="text" placeholder="search symbol" value={this.state.value} onChange={this.handleChange}/>
+              <button onClick={this.searchSymbol}>search</button>
               <MenuBar/>
             </Pane>
             <Contents>

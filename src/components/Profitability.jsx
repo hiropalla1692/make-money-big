@@ -87,7 +87,7 @@ const Profitability = ({ stockInfo }) => {
             <div>
               <BarChart
                 width={600}
-                height={300}
+                height={400}
                 data={data}
                 margin={{
                   top: 5, right: 30, left: 20, bottom: 5,
@@ -95,9 +95,9 @@ const Profitability = ({ stockInfo }) => {
               >
                 <XAxis dataKey="name" tick={{ fill: 'white' , fontSize: 15}}/>
                 <YAxis color="#8884d8" tick={{ fill: 'white' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                <Bar dataKey="totalStockholdersEquity"  stackId="a" fill="#f9e5e9" />
-                <Bar dataKey="totalLiabilities"  stackId="a" fill="#d14a5a" />
-                <Bar dataKey="netIncome"  stackId="b" fill="#e5f9f8" />
+                <Bar dataKey="totalStockholdersEquity"  stackId="a" fill="white" />
+                <Bar dataKey="totalLiabilities"  stackId="a" fill="#e17186" />
+                <Bar dataKey="netIncome"  stackId="b" fill="white" />
                 <Bar dataKey="nonOperatingExpense"  stackId="b" fill="#92e7df" />
                 <Bar dataKey="operatingExpense"  stackId="b" fill="#4ad1c2" />
                 <Bar dataKey="costOfRevenue"  stackId="b" fill="#2f9584" />
