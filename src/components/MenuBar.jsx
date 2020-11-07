@@ -10,7 +10,7 @@ const Container = styled.div`
   font-size: calc(4px + 2vmin);
 `
 const Navigator = styled.nav`
-  ul {
+  a {
     color: gray;
     :hover {
       color: white;

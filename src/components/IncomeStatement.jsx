@@ -39,7 +39,7 @@ const Items = styled.div`
   flex-flow: row wrap;
 `
 
-const Chart = ({ stockInfo }) => {
+const IncomeStatement = ({ stockInfo }) => {
   const data = 
     stockInfo.length 
     ? stockInfo.map((each) => {
@@ -316,12 +316,16 @@ const Chart = ({ stockInfo }) => {
             <p>
               Howdy! Welcome to Make Money Big🎿 <br></br>
               <br></br>
-              This app visualizes various financial data of individual firms, which helps you to figure out what they really were, are and will be.<br></br>
+              This app aims to provide you with valuable visuals from financial data of individual firms, which helps you to figure out what they really were, are and will be.<br></br>
               <br></br>
               There are three principles that I am guided by in making visuals from data.<br></br>
-              1. Insightful<br></br>
-              2. Easy to understand<br></br>
-              3. Aesthetic<br></br>
+              1. Insightful🦍<br></br>
+              2. Easy to understand🚿<br></br>
+              3. Aesthetic🖼<br></br>
+              <br></br>
+              Like this...
+              <br></br>
+              Gif
               <br></br>
               Let's dive in...
             </p>
@@ -330,4 +334,4 @@ const Chart = ({ stockInfo }) => {
   )
 }
 
-export default Chart;
+export default IncomeStatement;

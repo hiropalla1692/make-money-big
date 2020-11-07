@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import IncomeStatement from './components/IncomeStatement';
+import Profitability from './components/Profitability';
 import Header from './components/Header';
 import MenuBar from './components/MenuBar';
 import { fetchData } from './api';
@@ -70,7 +71,7 @@ class App extends React.Component {
                   <Valuation />
                 </Route>
                 <Route path="/profit">
-                  <Profitability />
+                  <Profitability stockInfo={stockInfo} />
                 </Route>
                 <Route path="/" exact >
                   <IncomeStatement stockInfo={stockInfo} />
@@ -91,10 +92,6 @@ class App extends React.Component {
 
 function Valuation() {
   return <h2>Valuationだよ</h2>;
-}
-
-function Profitability() {
-  return <h2>Profitabilityだよ</h2>;
 }
 
 function BalanceSheet() {
