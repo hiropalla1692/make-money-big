@@ -12,6 +12,67 @@ const Overview = styled.div`
     font-size: calc(2px + 2vmin);;
   }
 `
+const Items = styled.div`
+  display: flex;
+  width: 95%;
+  height: 50vh;
+  margin: 2%;
+  padding: 2%;
+  background-color: #f8f8fc;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  align-items: center;
+`
+
+const Boxes = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  height: 100%;
+  width: 100%;
+`
+const Title = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: 1%;
+  width: 100%;
+  text-align: left;
+  font-family: "Poppins";
+  font-size: calc(2px + 2vmin);
+  font-weight: bold;
+`
+const Box = styled.div`
+  display: flex;
+  height: 100%;
+  margin-right: 1%;
+  width: 40%;
+  align-items: center;
+  background-color: #f8f8fc;
+  color: #303037;
+  flex-flow: row wrap;
+  ${props => props.big && css`
+    width: 60%;
+  `}
+`
+const BigItem = styled.div`
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  align-items: center;
+  box-shadow: 
+    0 1.9px 5px rgba(238,239,247);
+  background-color: white;
+`
+const Item = styled.div`
+  margin: 0.5% 0.5% 0 0;
+  height: 49%;
+  width: 49%;
+  border-radius: 10px;
+  align-items: center;
+  box-shadow: 
+    0 1.9px 5px rgba(238,239,247);
+  background-color: white;
+`
 
 const Profitability = ({ stockInfo }) => {
 
@@ -64,6 +125,36 @@ const Profitability = ({ stockInfo }) => {
           | ＄{(Math.round(data[data.length - 1].netIncome* 10)/10).toLocaleString()} 
           / ＄{(Math.round(profitData[0].totalStockholdersEquity * 10)/10).toLocaleString()}</p>
         </Overview>
+        <Items>
+          <Title>
+            <div>■ Revenue and Income&nbsp;&nbsp;</div>
+          </Title>
+          <Boxes>
+            <Box>
+              <BigItem>
+                <h6>Profit Structure</h6>
+
+              </BigItem>
+            </Box>
+            <Box big>
+              <Item>
+                <h6>Revenue</h6>
+
+              </Item>
+              <Item>
+                <h6>Gross Profit</h6>
+
+              </Item>
+              <Item>
+                <h6>Operating Income</h6>
+
+              </Item>
+              <Item>
+                <h6>Net Income</h6>
+              </Item>
+            </Box>
+          </Boxes>
+        </Items>
         <div>
           <h6>ROE</h6>
             <div>

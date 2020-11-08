@@ -6,8 +6,9 @@ const Container = styled.div`
   display:flex;
   flex-flow: column nowrap;
   font-family: 'Poppins', sans-serif;
+  font-weight: bold;
   justify-content: center;
-  font-size: calc(4px + 2vmin);
+  font-size: calc(2px + 2vmin);
 `
 const Navigator = styled.nav`
   a {
