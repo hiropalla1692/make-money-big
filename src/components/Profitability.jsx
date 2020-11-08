@@ -7,8 +7,31 @@ import { fetchProfitData } from '../api';
 import SplitPane, { Pane } from 'react-split-pane';
 import styled, {css} from 'styled-components';
 
+const Container = styled.div`
+  margin: 3%;
+  color: #313896;
+  font-family: 'Source Sans Pro', sans-serif;
+  p {
+    text-align: right;
+    font-size: 13px;
+  }
+`
+
+const Barcharts = styled.div`
+  display: flex;
+  width: 130vh;
+  flex-flow: column wrap;
+  color: #313896;
+  justify-content: center;
+  h6 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+`
+
 const Overview = styled.div`
   p {
+    color: #313896;
     font-size: calc(2px + 2vmin);;
   }
 `
@@ -112,6 +135,8 @@ const Profitability = ({ stockInfo }) => {
           totalStockholdersEquity: profitData[index].totalStockholdersEquity,
           totalAssets: profitData[index].totalLiabilities + profitData[index].totalStockholdersEquity,
           roe: each.netIncome*100 / profitData[index].totalStockholdersEquity,
+          roa: each.netIncome*100 / (profitData[index].totalStockholdersEquity + profitData[index].totalLiabilities),
+          totalAssetTurnover: each.revenue*100 / (profitData[index].totalLiabilities + profitData[index].totalStockholdersEquity),
         }
       )
     }).reverse()
@@ -119,83 +144,95 @@ const Profitability = ({ stockInfo }) => {
 
   if (profitData.length && profitData.length==stockInfo.length) {
     return (
-      <div>
-        <Overview>
-          <p>ROE{Math.round(data[data.length - 1].netIncome*100 / profitData[0].totalStockholdersEquity * 100)/100}% 
-          | ＄{(Math.round(data[data.length - 1].netIncome* 10)/10).toLocaleString()} 
-          / ＄{(Math.round(profitData[0].totalStockholdersEquity * 10)/10).toLocaleString()}</p>
-        </Overview>
-        <Items>
-          <Title>
-            <div>■ Revenue and Income&nbsp;&nbsp;</div>
-          </Title>
-          <Boxes>
-            <Box>
-              <BigItem>
-                <h6>Profit Structure</h6>
-
-              </BigItem>
-            </Box>
-            <Box big>
-              <Item>
-                <h6>Revenue</h6>
-
-              </Item>
-              <Item>
-                <h6>Gross Profit</h6>
-
-              </Item>
-              <Item>
-                <h6>Operating Income</h6>
-
-              </Item>
-              <Item>
-                <h6>Net Income</h6>
-              </Item>
-            </Box>
-          </Boxes>
-        </Items>
-        <div>
-          <h6>ROE</h6>
-            <div>
-              <LineChart
-                width={300}
-                height={150}
-                data={data}
-                margin={{
-                  top: 5, right: 30, left: 20, bottom: 5,
-                }}
-              >
-                <XAxis dataKey="name" tick={{ fill: 'white' , fontSize: 15}}/>
-                <YAxis unit="%" color="#8884d8" tick={{ fill: 'white' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
-                <Line dataKey="roe" fill="#0060ac" />
-              </LineChart>
-            </div>
-        </div>
-        <div>
-          <h6>ROE</h6>
-            <div>
-              <BarChart
-                width={600}
-                height={400}
-                data={data}
-                margin={{
-                  top: 5, right: 30, left: 20, bottom: 5,
-                }}
-              >
-                <XAxis dataKey="name" tick={{ fill: 'white' , fontSize: 15}}/>
-                <YAxis color="#8884d8" tick={{ fill: 'white' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                <Bar dataKey="totalStockholdersEquity"  stackId="a" fill="white" />
-                <Bar dataKey="totalLiabilities"  stackId="a" fill="#e17186" />
-                <Bar dataKey="netIncome"  stackId="b" fill="white" />
-                <Bar dataKey="nonOperatingExpense"  stackId="b" fill="#92e7df" />
-                <Bar dataKey="operatingExpense"  stackId="b" fill="#4ad1c2" />
-                <Bar dataKey="costOfRevenue"  stackId="b" fill="#2f9584" />
-              </BarChart>
-            </div>
-        </div>
-      </div>
+      <Container>
+        <Barcharts>
+          <Overview>
+            <p>ROE{Math.round(data[data.length - 1].netIncome*100 / profitData[0].totalStockholdersEquity * 100)/100}% 
+            | ＄{(Math.round(data[data.length - 1].netIncome* 10)/10).toLocaleString()} 
+            / ＄{(Math.round(profitData[0].totalStockholdersEquity * 10)/10).toLocaleString()}</p>
+          </Overview>
+          <Items>
+            <Title>
+              <div>■ ROE&nbsp;&nbsp;</div>
+            </Title>
+            <Boxes>
+              <Box>
+                <BigItem>
+                  <h6>Comparison Equity with Net Income</h6>
+                  <ResponsiveContainer width="90%" height="90%">
+                    <BarChart
+                    data={data}
+                    margin={{
+                      top: 5, right: 5, left: 5, bottom: 5,
+                    }}
+                  >
+                    <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                    <YAxis  tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                    <Bar dataKey="totalStockholdersEquity"  stackId="a" fill="#35cf4e" />
+                    <Bar dataKey="totalLiabilities"  stackId="a" fill="#8b8c99" />
+                    <Bar dataKey="netIncome"  stackId="b" fill="#ff5e5e" />
+                    <Bar dataKey="nonOperatingExpense"  stackId="b" fill="#8b8c99" />
+                    <Bar dataKey="operatingExpense"  stackId="b" fill="#8b8c99" />
+                    <Bar dataKey="costOfRevenue"  stackId="b" fill="#8b8c99" />
+                  </BarChart>
+                </ResponsiveContainer>
+                </BigItem>
+              </Box>
+              <Box big>
+                <Item>
+                  <h6>ROE and ROA</h6>
+                  <ResponsiveContainer width="90%" height="80%">
+                    <LineChart
+                    data={data}
+                    margin={{
+                      top: 5, right: 5, left: 5, bottom: 5,
+                    }}
+                    >
+                    <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                    <YAxis unit="%" color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                    <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                    <Line stroke="#313896" dataKey="roe" fill="#313896" />
+                    <Line stroke="#35cf4e" dataKey="roa" fill="#00d7ff" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </Item>
+                <Item>
+                  <h6>Total Asset Turnover</h6>
+                  <ResponsiveContainer width="90%" height="80%">
+                    <LineChart
+                    data={data}
+                    margin={{
+                      top: 5, right: 5, left: 5, bottom: 5,
+                    }}
+                    >
+                    <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                    <YAxis unit="%" color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                    <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                    <Line stroke="#313896" dataKey="totalAssetTurnover" fill="#313896" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </Item>
+                <Item>
+                  <h6>Net Profit to Sales</h6>
+                  <ResponsiveContainer width="90%" height="80%">
+                    <LineChart
+                    data={data}
+                    margin={{
+                      top: 5, right: 5, left: 5, bottom: 5,
+                    }}
+                    >
+                    <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                    <YAxis unit="%" color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                    <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                    <Line stroke="#ff5e5e" dataKey="netIncomeR" fill="#ff5e5e" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </Item>
+              </Box>
+            </Boxes>
+          </Items>
+        </Barcharts>
+      </Container>
     )
   } else {
     return (

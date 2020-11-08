@@ -21,8 +21,9 @@ const Container = styled.div`
 const About = styled.div`
   padding: 4%;
   text-align: left;
-  font-family: "Roboto";
-  font-weight: "300";
+  color: #313896;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: bold;
   font-size: 15px;
 `
 
