@@ -1,6 +1,6 @@
 import React, {useState, useEffect } from 'react';
 import {
-  BarChart, Bar, AreaChart, Area, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+  LineChart, Line, BarChart, Bar, AreaChart, Area, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import Toggle from './Toggle';
 import { fetchDailyData } from '../api';
@@ -9,7 +9,11 @@ import styled, {css} from 'styled-components';
 
 
 const Container = styled.div`
-  margin: 3%;
+  margin: 2%;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
   color: #313896;
   font-family: 'Source Sans Pro', sans-serif;
   p {
@@ -27,32 +31,22 @@ const About = styled.div`
   font-size: 15px;
 `
 
-const Barcharts = styled.div`
-  display: flex;
-  width: 100%;
-  flex-flow: column wrap;
-  justify-content: center;
-  h6 {
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
-`
 const Items = styled.div`
   display: flex;
-  width: 95%;
+  width: 90%;
   height: 50vh;
-  margin: 2%;
   padding: 2%;
+  margin-bottom: 2%;
   background-color: #f8f8fc;
   flex-flow: column nowrap;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
 `
 
 const Boxes = styled.div`
   display: flex;
   flex-flow: row nowrap;
-  height: 100%;
+  height: 90%;
   width: 100%;
 `
 const Title = styled.div`
@@ -60,6 +54,7 @@ const Title = styled.div`
   align-items: center;
   margin-top: 0;
   margin-bottom: 1%;
+  height: 6%;
   width: 100%;
   text-align: left;
   font-family: "Poppins";
@@ -69,17 +64,21 @@ const Title = styled.div`
 const Box = styled.div`
   display: flex;
   height: 100%;
-  margin-right: 1%;
-  width: 40%;
   align-items: center;
   background-color: #f8f8fc;
   color: #303037;
   flex-flow: row wrap;
-  ${props => props.big && css`
+  ${props => props.main && css`
+    width: 40%;
+    margin-right: 1%;
+  `}
+  ${props => props.sub && css`
     width: 60%;
   `}
 `
-const BigItem = styled.div`
+const Item = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
   height: 100%;
   width: 100%;
   border-radius: 10px;
@@ -87,19 +86,29 @@ const BigItem = styled.div`
   box-shadow: 
     0 1.9px 5px rgba(238,239,247);
   background-color: white;
-`
-const Item = styled.div`
-  margin: 0.5% 0.5% 0 0;
-  height: 49%;
-  width: 49%;
-  border-radius: 10px;
-  align-items: center;
-  box-shadow: 
-    0 1.9px 5px rgba(238,239,247);
-  background-color: white;
-`
 
-const IncomeStatement = ({ stockInfo }) => {
+  h5 {
+    margin: 2% 0 1% 0;
+  }
+
+  ${props => props.mini && css`
+    margin: 0.5% 0.5% 0 0;
+    height: 49%;
+    width: 49%;
+  `}
+`
+// const Item = styled.div`
+//   margin: 0.5% 0.5% 0 0;
+//   height: 49%;
+//   width: 49%;
+//   border-radius: 10px;
+//   align-items: center;
+//   box-shadow: 
+//     0 1.9px 5px rgba(238,239,247);
+//   background-color: white;
+// `
+
+const IncomeStatement = ({ stockInfo, changePeriod }) => {
   const data = 
     stockInfo.length 
     ? stockInfo.map((each) => {
@@ -121,12 +130,30 @@ const IncomeStatement = ({ stockInfo }) => {
           costOfRevenueR: (each.costOfRevenue*100) / each.revenue,
           operatingExpenseR: (each.revenue - each.costOfRevenue - each.operatingIncome)*100 / each.revenue,
           nonOperatingExpenseR: (each.operatingIncome - each.netIncome)*100 / each.revenue,
+          sellingAndMarketingExpenses: each.sellingAndMarketingExpenses,
+          sellingAndMarketingExpensesR: each.sellingAndMarketingExpenses*100 / each.operatingExpenses,
+          rd: each.researchAndDevelopmentExpenses,
+          rdR: each.researchAndDevelopmentExpenses*100 / each.operatingExpenses,
+          sga: each.operatingExpenses - each.researchAndDevelopmentExpenses,
+          sgaR: (each.operatingExpenses - each.researchAndDevelopmentExpenses )*100 / each.operatingExpenses,
+          da: each.depreciationAndAmortization,
+          daR: each.depreciationAndAmortization*100 / each.operatingExpenses,
+          interestExpense: each.interestExpense,
+          incomeTaxExpense: each.incomeTaxExpense,
+          ebitdaR: (each.netIncome + each.incomeTaxExpense + each.interestExpense + each.depreciationAndAmortization)*100 / each.revenue,
         }
       )
     }).reverse()
     : [];
 
   const [isOn, setIsOn] = useState(true);
+  const [isAnnual, setIsAnnual] = useState(true);
+
+  useEffect(() => {
+    let period = isAnnual;
+    changePeriod(period);
+  }, [isAnnual]);
+
 
   const chartColor = [
     {
@@ -139,6 +166,11 @@ const IncomeStatement = ({ stockInfo }) => {
       two: "#ad4aae",
       three: "#d094cf",
       four: "#e2bee2"
+    }, {
+      one: "#369223",
+      two: "#67bf57",
+      three: "#a7d89e",
+      four: "#c9e7c4"
     }
   ]
 
@@ -147,159 +179,307 @@ const IncomeStatement = ({ stockInfo }) => {
     ? ["netIncome", "nonOperatingExpense", "operatingExpense", "costOfRevenue", "", "grossProfit", "operatingIncome", "netIncome"  ]
     :["netIncomeR", "nonOperatingExpenseR", "operatingExpenseR", "costOfRevenueR", "%", "grossProfitR", "operatingIncomeR", "netIncomeR"];
 
+  const operatingExpenseStructureData = 
+  (isOn === true) 
+  ? ["rd", "sga", "da", ""   ]
+  :["rdR", "sgaR", "daR", "%" ];
+
+  const ebitdaData = ["netIncome", "incomeTaxExpense", "interestExpense", "da", "" ];
+
   return (
-    <div>
+    <React.Fragment>
       {stockInfo.length 
         ? (
           <Container>
             <h3 align="left" >{stockInfo[0].symbol}</h3>
-            <Barcharts>
             <p>In Millions of USD except per share items</p>
-              <Items>
-                <Title>
-                  <div>■ Revenue and Income&nbsp;&nbsp;</div>
-                  {/* <button onClick={() => setIsOn(!isOn)}>push</button> */}
-                  <Toggle change={() => setIsOn(!isOn)}/>
-                </Title>
-                <Boxes>
-                  <Box>
-                    <BigItem>
-                      <h6>Profit Structure</h6>
-                      <ResponsiveContainer width="90%" height="90%">
-                        <AreaChart
-                          data={data}
-                          margin={{
-                            top: 5, right: 5, left: 5, bottom: 5,
-                          }}
-                        >
-                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                          <YAxis unit={profitStructureData[4]} tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                          <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
-                          <Area type="monotone" fillOpacity="1" dataKey={profitStructureData[0]} stackId="1" stroke={chartColor[0].four} fill={chartColor[0].four} />
-                          <Area type="monotone" fillOpacity="1" dataKey={profitStructureData[1]} stackId="1" stroke={chartColor[0].three} fill={chartColor[0].three} />
-                          <Area type="monotone" fillOpacity="1" dataKey={profitStructureData[2]} stackId="1" stroke={chartColor[0].two} fill={chartColor[0].two} />
-                          <Area type="monotone" fillOpacity="1" dataKey={profitStructureData[3]} stackId="1" stroke={chartColor[0].one} fill={chartColor[0].one} />
-                        </AreaChart>
-                      </ResponsiveContainer>
-                    </BigItem>
-                  </Box>
-                  <Box big>
-                    <Item>
-                      <h6>Revenue</h6>
-                        <ResponsiveContainer width="90%" height="80%">
-                          <BarChart
-                            data={data}
-                            margin={{
-                              top: 5, right: 5, left: 5, bottom: 5,
-                            }}
-                          >
-                            <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                            <YAxis color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                            <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
-                            <Bar dataKey="revenue" fill={chartColor[0].one} />
-                          </BarChart>
-                        </ResponsiveContainer>
-                    </Item>
-                    <Item>
-                      <h6>Gross Profit</h6>
-                        <ResponsiveContainer width="90%" height="80%">
-                          <BarChart
-                            data={data}
-                            margin={{
-                              top: 5, right: 5, left: 5, bottom: 5,
-                            }}
-                          >
-                            <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                            <YAxis unit={profitStructureData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                            <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
-                            <Bar dataKey={profitStructureData[5]} fill={chartColor[0].two} />
-                          </BarChart>
-                        </ResponsiveContainer>
-                    </Item>
-                    <Item>
-                      <h6>Operating Income</h6>
-                        <ResponsiveContainer width="90%" height="80%">
-                          <BarChart
-                            data={data}
-                            margin={{
-                              top: 5, right: 5, left: 5, bottom: 5,
-                            }}
-                          >
-                            <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                            <YAxis unit={profitStructureData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                            <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                            <Bar dataKey={profitStructureData[6]} fill={chartColor[0].three} />
-                          </BarChart>
-                        </ResponsiveContainer>
-                    </Item>
-                    <Item>
-                      <h6>Net Income</h6>
-                      <ResponsiveContainer width="90%" height="80%">
+            <Toggle change={() => setIsAnnual(!isAnnual)} />
+            <Items>
+              <Title>
+                <div>■ Revenue and Income&nbsp;&nbsp;</div>
+                {/* <button onClick={() => setIsOn(!isOn)}>push</button> */}
+                <Toggle change={() => setIsOn(!isOn)}/>
+              </Title>
+              <Boxes>
+                <Box main>
+                  <Item>
+                    <h5>Profit Structure</h5>
+                    <ResponsiveContainer width="95%" height="95%">
+                      <AreaChart
+                        data={data}
+                        margin={{
+                          top: 5, right: 25, left: 0, bottom: 5,
+                        }}
+                      >
+                        <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                        <YAxis unit={profitStructureData[4]} tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                        <Area type="monotone" fillOpacity="1" dataKey={profitStructureData[0]} stackId="1" stroke={chartColor[0].four} fill={chartColor[0].four} />
+                        <Area type="monotone" fillOpacity="1" dataKey={profitStructureData[1]} stackId="1" stroke={chartColor[0].three} fill={chartColor[0].three} />
+                        <Area type="monotone" fillOpacity="1" dataKey={profitStructureData[2]} stackId="1" stroke={chartColor[0].two} fill={chartColor[0].two} />
+                        <Area type="monotone" fillOpacity="1" dataKey={profitStructureData[3]} stackId="1" stroke={chartColor[0].one} fill={chartColor[0].one} />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </Item>
+                </Box>
+                <Box sub>
+                  <Item mini>
+                    <h5>Revenue</h5>
+                      <ResponsiveContainer width="95%" height="95%">
                         <BarChart
                           data={data}
                           margin={{
-                            top: 5, right: 5, left: 5, bottom: 5,
+                            top: 5, right: 25, left: 0, bottom: 5,
+                          }}
+                        >
+                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                          <YAxis color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                          <Bar dataKey="revenue" fill={chartColor[0].one} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                  </Item>
+                  <Item mini>
+                    <h5>Gross Profit</h5>
+                      <ResponsiveContainer width="95%" height="95%">
+                        <BarChart
+                          data={data}
+                          margin={{
+                            top: 5, right: 25, left: 0, bottom: 5,
+                          }}
+                        >
+                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                          <YAxis unit={profitStructureData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                          <Bar dataKey={profitStructureData[5]} fill={chartColor[0].two} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                  </Item>
+                  <Item mini>
+                    <h5>Operating Income</h5>
+                      <ResponsiveContainer width="95%" height="95%">
+                        <BarChart
+                          data={data}
+                          margin={{
+                            top: 5, right: 25, left: 0, bottom: 5,
                           }}
                         >
                           <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
                           <YAxis unit={profitStructureData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                           <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                          <Bar dataKey={profitStructureData[7]} fill={chartColor[0].four} />
+                          <Bar dataKey={profitStructureData[6]} fill={chartColor[0].three} />
                         </BarChart>
                       </ResponsiveContainer>
-                    </Item>
-                  </Box>
-                </Boxes>
-              </Items>
-              <div>
-                <h6 align="left">● per Share</h6>
-              </div>
-              <Items>
-                <div>
-                  <h6>Diluted Weighted Average Shares Outst. (in millions)</h6>
-                  <div>
-                    <BarChart
-                      width={300}
-                      height={150}
-                      data={data}
-                      margin={{
-                        top: 5, right: 30, left: 20, bottom: 5,
-                      }}
-                    >
-                      <XAxis dataKey="name" tick={{ fill: 'white', fontSize: 15 }}/>
-                      <YAxis tick={{ fill: 'white', fontSize: 15 }} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                      <Tooltip fontSize="15" formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                      <Bar dataKey="weightedAverageShsOutDil" fill="#e04499" />
-                    </BarChart>
-                  </div>
-                </div>
-                <div>
-                  <h6>EPS</h6>
-                  <div>
-                    <BarChart
-                      width={300}
-                      height={150}
-                      data={data}
-                      margin={{
-                        top: 5, right: 30, left: 20, bottom: 5,
-                      }}
-                    >
-                      <XAxis dataKey="name" tick={{ fill: 'white', fontSize: 15 }}/>
-                      <YAxis tick={{ fill: 'white', fontSize: 15 }} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                      <Tooltip fontSize="15" formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                      <Bar dataKey="eps" fill="#e792c5" />
-                    </BarChart>
-                  </div>
-                </div>
-              </Items>
-              {/* <div>
-                {stockInfo.map((each) => { 
-                  return (
-                  <h6 key={each.date[0]}>{each.date[0]}:{each.eps}</h6>
-                  )
-                })}
-              </div> */}
-            </Barcharts>
+                  </Item>
+                  <Item mini>
+                    <h5>Net Income</h5>
+                    <ResponsiveContainer width="95%" height="95%">
+                      <BarChart
+                        data={data}
+                        margin={{
+                          top: 5, right: 25, left: 0, bottom: 5,
+                        }}
+                      >
+                        <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                        <YAxis unit={profitStructureData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <Bar dataKey={profitStructureData[7]} fill={chartColor[0].four} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </Item>
+                </Box>
+              </Boxes>
+            </Items>
+            <Items>
+              <Title>
+                <div>■ Operating Expenses&nbsp;&nbsp;</div>
+                {/* <button onClick={() => setIsOn(!isOn)}>push</button> */}
+                <Toggle change={() => setIsOn(!isOn)}/>
+              </Title>
+              <Boxes>
+                <Box main>
+                  <Item>
+                    <h5>Operating Expenses Structure</h5>
+                    <ResponsiveContainer width="95%" height="95%">
+                      <AreaChart
+                        data={data}
+                        margin={{
+                          top: 5, right: 25, left: 0, bottom: 5,
+                        }}
+                      >
+                        <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                        <YAxis unit={operatingExpenseStructureData[3]} tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                        <Area type="monotone" fillOpacity="1" dataKey={operatingExpenseStructureData[1]} stackId="1" stroke={chartColor[1].three} fill={chartColor[1].three} />
+                        <Area type="monotone" fillOpacity="1" dataKey={operatingExpenseStructureData[0]} stackId="1" stroke={chartColor[1].one} fill={chartColor[1].one} />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </Item>
+                </Box>
+                <Box sub>
+                  <Item mini>
+                    <h5>Operating Expenses / Revenue</h5>
+                    <ResponsiveContainer width="95%" height="95%">
+                      <LineChart
+                        data={data}
+                        margin={{
+                          top: 5, right: 25, left: 0, bottom: 5,
+                        }}
+                      >
+                        <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                        <YAxis unit="%" color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <Line stroke="#7f2392" dataKey="operatingExpenseR" fill="#7f2392" />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </Item>
+                  <Item mini>
+                    <h5>R&D</h5>
+                      <ResponsiveContainer width="95%" height="95%">
+                        <BarChart
+                          data={data}
+                          margin={{
+                            top: 5, right: 25, left: 0, bottom: 5,
+                          }}
+                        >
+                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                          <YAxis unit={operatingExpenseStructureData[3]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                          <Bar dataKey={operatingExpenseStructureData[0]} fill={chartColor[1].one} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                  </Item>
+                  <Item mini>
+                    <h5>SG&A</h5>
+                      <ResponsiveContainer width="95%" height="95%">
+                        <BarChart
+                          data={data}
+                          margin={{
+                            top: 5, right: 25, left: 0, bottom: 5,
+                          }}
+                        >
+                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                          <YAxis unit={operatingExpenseStructureData[3]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                          <Bar dataKey={operatingExpenseStructureData[1]} fill={chartColor[1].three} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                  </Item>
+                  <Item mini>
+                    <h5>Depreciation and Amortization</h5>
+                      <ResponsiveContainer width="95%" height="95%">
+                        <BarChart
+                          data={data}
+                          margin={{
+                            top: 5, right: 25, left: 0, bottom: 5,
+                          }}
+                        >
+                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                          <YAxis unit={operatingExpenseStructureData[3]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <Bar dataKey={operatingExpenseStructureData[2]} fill={chartColor[2].one} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                  </Item>
+                </Box>
+              </Boxes>
+            </Items>
+            <Items>
+              <Title>
+                <div>■ EBITDA and Net Income&nbsp;&nbsp;</div>
+                {/* <button onClick={() => setIsOn(!isOn)}>push</button> */}
+                {/* <Toggle change={() => setIsOn(!isOn)}/> */}
+              </Title>
+              <Boxes>
+                <Box main>
+                  <Item>
+                    <h5>From Net Income to EBITDA</h5>
+                    <ResponsiveContainer width="95%" height="95%">
+                      <AreaChart
+                        data={data}
+                        margin={{
+                          top: 5, right: 25, left: 0, bottom: 5,
+                        }}
+                      >
+                        <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                        <YAxis unit={ebitdaData[4]} tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                        <Area type="monotone" fillOpacity="1" dataKey={ebitdaData[0]} stackId="1" stroke={chartColor[2].four} fill={chartColor[2].four} />
+                        <Area type="monotone" fillOpacity="1" dataKey={ebitdaData[1]} stackId="1" stroke={chartColor[2].three} fill={chartColor[2].three} />
+                        <Area type="monotone" fillOpacity="1" dataKey={ebitdaData[2]} stackId="1" stroke={chartColor[2].two} fill={chartColor[2].two} />
+                        <Area type="monotone" fillOpacity="1" dataKey={ebitdaData[3]} stackId="1" stroke={chartColor[2].one} fill={chartColor[2].one} />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </Item>
+                </Box>
+                <Box sub>
+                  <Item mini>
+                    <h5>EBITDA Margin</h5>
+                    <ResponsiveContainer width="95%" height="95%">
+                      <LineChart
+                        data={data}
+                        margin={{
+                          top: 5, right: 25, left: 0, bottom: 5,
+                        }}
+                      >
+                        <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                        <YAxis unit="%" color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <Line stroke={chartColor[2].one} dataKey="ebitdaR" fill={chartColor[2].one} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </Item>
+                  <Item mini>
+                    <h5>Depreciation and Amortization</h5>
+                      <ResponsiveContainer width="95%" height="95%">
+                        <BarChart
+                          data={data}
+                          margin={{
+                            top: 5, right: 25, left: 0, bottom: 5,
+                          }}
+                        >
+                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                          <YAxis unit={ebitdaData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                          <Bar dataKey={ebitdaData[3]} fill={chartColor[2].one} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                  </Item>
+                  <Item mini>
+                    <h5>Interest Expense</h5>
+                      <ResponsiveContainer width="95%" height="95%">
+                        <BarChart
+                          data={data}
+                          margin={{
+                            top: 5, right: 25, left: 0, bottom: 5,
+                          }}
+                        >
+                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                          <YAxis unit={ebitdaData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                          <Bar dataKey={ebitdaData[2]} fill={chartColor[2].two} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                  </Item>
+                  <Item mini>
+                    <h5>Income Tax Expense</h5>
+                      <ResponsiveContainer width="95%" height="95%">
+                        <BarChart
+                          data={data}
+                          margin={{
+                            top: 5, right: 25, left: 0, bottom: 5,
+                          }}
+                        >
+                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                          <YAxis unit={ebitdaData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <Bar dataKey={ebitdaData[1]} fill={chartColor[2].three} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                  </Item>
+                </Box>
+              </Boxes>
+            </Items>
           </Container>
           )
         : (<About>
@@ -320,7 +500,7 @@ const IncomeStatement = ({ stockInfo }) => {
               Let's dive in...
             </p>
           </About>)}
-    </div>
+    </React.Fragment>
   )
 }
 

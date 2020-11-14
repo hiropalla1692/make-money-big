@@ -137,6 +137,7 @@ const Profitability = ({ stockInfo }) => {
           roe: each.netIncome*100 / profitData[index].totalStockholdersEquity,
           roa: each.netIncome*100 / (profitData[index].totalStockholdersEquity + profitData[index].totalLiabilities),
           totalAssetTurnover: each.revenue*100 / (profitData[index].totalLiabilities + profitData[index].totalStockholdersEquity),
+          equityMultiplier: (profitData[index].totalLiabilities + profitData[index].totalStockholdersEquity) / profitData[index].totalStockholdersEquity,
         }
       )
     }).reverse()
@@ -197,7 +198,23 @@ const Profitability = ({ stockInfo }) => {
                   </ResponsiveContainer>
                 </Item>
                 <Item>
-                  <h6>Total Asset Turnover</h6>
+                  <h6>Net Profit to Sales</h6>
+                  <ResponsiveContainer width="90%" height="80%">
+                    <LineChart
+                    data={data}
+                    margin={{
+                      top: 5, right: 5, left: 5, bottom: 5,
+                    }}
+                    >
+                    <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
+                    <YAxis unit="%" color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                    <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                    <Line stroke="#ff5e5e" dataKey="netIncomeR" fill="#ff5e5e" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </Item>
+                <Item>
+                  <h6>Asset Turnover</h6>
                   <ResponsiveContainer width="90%" height="80%">
                     <LineChart
                     data={data}
@@ -213,7 +230,7 @@ const Profitability = ({ stockInfo }) => {
                   </ResponsiveContainer>
                 </Item>
                 <Item>
-                  <h6>Net Profit to Sales</h6>
+                  <h6>Equity Multiplier</h6>
                   <ResponsiveContainer width="90%" height="80%">
                     <LineChart
                     data={data}
@@ -222,9 +239,9 @@ const Profitability = ({ stockInfo }) => {
                     }}
                     >
                     <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                    <YAxis unit="%" color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                    <YAxis color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                     <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
-                    <Line stroke="#ff5e5e" dataKey="netIncomeR" fill="#ff5e5e" />
+                    <Line stroke="#35cf4e" dataKey="equityMultiplier" fill="#35cf4e" />
                     </LineChart>
                   </ResponsiveContainer>
                 </Item>
