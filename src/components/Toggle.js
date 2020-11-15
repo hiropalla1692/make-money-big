@@ -2,23 +2,36 @@ import React, {useState, useEffect } from 'react';
 import styled, {css} from 'styled-components';
 
 const Toggle = (props) => {
+  if (props.annual === true) {
   return (
-    <Switch >
+    <Switch period>
       <label class="switch__label">
           <input type="checkbox" class="switch__input" onClick={props.change}/>
           <span class="switch__content"></span>
           {/* <span class="switch__circle"></span> */}
       </label>
     </Switch>
-  );
+  )} else {
+    return (
+      <Switch>
+        <label class="switch__label">
+            <input type="checkbox" class="switch__input" onClick={props.change}/>
+            <span class="switch__content"></span>
+            {/* <span class="switch__circle"></span> */}
+        </label>
+      </Switch>
+    );
+  }
 };
 
 const Switch = styled.div`
   display: inline-block;
   text-align: center;
+  font-weight: bold;
+  margin: 1%;
 
   .switch__label {
-      width: 40px;
+      width: 80px;
       position: relative;
       display: inline-block;
       text-align: center;
@@ -91,7 +104,16 @@ const Switch = styled.div`
       left: 0;
       width: 100%;
       height: 100%;
-}
+  }
+
+  ${props => props.period && css`
+    .switch__content:before {
+      content: "Annual";
+    }
+    .switch__content:after {
+      content: "Quarter";
+    }
+  `}
 `
 
 export default Toggle;

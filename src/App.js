@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import IncomeStatement from './components/IncomeStatement';
 import Profitability from './components/Profitability';
-import Header from './components/Header';
 import MenuBar from './components/MenuBar';
-import Toggle from './components/Toggle';
+import Overview from './components/Overview';
 import { fetchData, fetchQuarterData } from './api';
-import SplitPane, { Pane } from 'react-split-pane';
 import styled, {css} from 'styled-components';
 
 import './App.css';
@@ -66,6 +64,8 @@ const Menu = styled.div`
 const Contents = styled.div`
   flex: 0 1 80%;
   display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
   width: 100%;
   background-color: #eeeff7;
 `
@@ -76,6 +76,7 @@ class App extends React.Component {
     this.state = {
       value: '',
       stockInfo: [],
+      stockProfile: {},
       menu: '',
     };
     this.handleChange = this.handleChange.bind(this);
@@ -87,7 +88,8 @@ class App extends React.Component {
   searchSymbol = async () => {
     const searchword = this.state.value
     const fetchedData = await fetchData(searchword);
-    this.setState({stockInfo: fetchedData});
+    this.setState({stockInfo: fetchedData[0]});
+    this.setState({stockProfile: fetchedData[1]});
   }
 
   handleChange = (e) => {
@@ -98,7 +100,7 @@ class App extends React.Component {
     console.log(e);
     if (e === true) {
       const fetchedData = await fetchData(this.state.value);
-      this.setState({stockInfo: fetchedData});
+      this.setState({stockInfo: fetchedData[0]});
     } else {
       const fetchedData = await fetchQuarterData(this.state.value);
       this.setState({stockInfo: fetchedData});
@@ -106,7 +108,7 @@ class App extends React.Component {
   }
 
   render() {
-  const { stockInfo } = this.state;
+  const { stockInfo, stockProfile } = this.state;
   return (
     <BrowserRouter>
       <Wrapper>
@@ -127,14 +129,18 @@ class App extends React.Component {
           </Widget>
         </SideBar>
         <Contents>
+          {stockInfo.length ? <Overview stockProfile={stockProfile} /> : null }
           <Switch>
+            <Route path="/" exact>
+              <div>hi</div>
+            </Route>
             <Route path="/val">
               <Valuation />
             </Route>
             <Route path="/profit">
               <Profitability stockInfo={stockInfo} />
             </Route>
-            <Route path="/" exact >
+            <Route path="/pl" >
               <IncomeStatement 
                 stockInfo={stockInfo}
                 changePeriod = {this.changePeriod}
@@ -164,8 +170,6 @@ function BalanceSheet() {
 function CashFlowStatement() {
   return <h2>C/Sだよ</h2>;
 }
-
-
 
 
 export default App;

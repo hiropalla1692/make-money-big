@@ -25,7 +25,7 @@ const MenuBar = () => {
         <Link to="/profit">Profitability</Link>
       </Menu>
       <Menu>
-        <Link to="/">Income Statement</Link>
+        <Link to="/pl">Income Statement</Link>
       </Menu>
       <Menu>
         <Link to="/bs">Balance Sheet</Link>

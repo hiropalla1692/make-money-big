@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react';
+import React, {useState, useCallback } from 'react';
 import {
   LineChart, Line, BarChart, Bar, AreaChart, Area, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
@@ -29,6 +29,14 @@ const About = styled.div`
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: bold;
   font-size: 15px;
+`
+
+const Settings = styled.div`
+  width: 90%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
 `
 
 const Items = styled.div`
@@ -114,7 +122,7 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
     ? stockInfo.map((each) => {
       return (
         {
-          name: each.date[0],
+          name: each.date[1] + "-" + each.date[0],
           revenue: each.revenue,
           costOfRevenue: each.costOfRevenue,
           operatingExpense: each.revenue - each.costOfRevenue - each.operatingIncome,
@@ -149,9 +157,9 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
   const [isOn, setIsOn] = useState(true);
   const [isAnnual, setIsAnnual] = useState(true);
 
-  useEffect(() => {
-    let period = isAnnual;
-    changePeriod(period);
+  const callback = useCallback(() => {
+    setIsAnnual(!isAnnual);
+    changePeriod(!isAnnual);
   }, [isAnnual]);
 
 
@@ -191,14 +199,14 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
       {stockInfo.length 
         ? (
           <Container>
-            <h3 align="left" >{stockInfo[0].symbol}</h3>
-            <p>In Millions of USD except per share items</p>
-            <Toggle change={() => setIsAnnual(!isAnnual)} />
+            <Settings>
+              <Toggle change={callback} annual={true} />
+              <Toggle change={() => setIsOn(!isOn)} annual={false} />
+              <p>In Millions of USD except per share items</p>
+            </Settings>
             <Items>
               <Title>
                 <div>■ Revenue and Income&nbsp;&nbsp;</div>
-                {/* <button onClick={() => setIsOn(!isOn)}>push</button> */}
-                <Toggle change={() => setIsOn(!isOn)}/>
               </Title>
               <Boxes>
                 <Box main>
@@ -294,7 +302,6 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
               <Title>
                 <div>■ Operating Expenses&nbsp;&nbsp;</div>
                 {/* <button onClick={() => setIsOn(!isOn)}>push</button> */}
-                <Toggle change={() => setIsOn(!isOn)}/>
               </Title>
               <Boxes>
                 <Box main>
