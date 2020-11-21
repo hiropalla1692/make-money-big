@@ -12,7 +12,7 @@ const Container = styled.div`
   font-size: calc(2px + 2vmin);
 `
 const Menu = styled.div`
-  margin-bottom: 10%;
+  margin-bottom: 20%;
 `
 
 const MenuBar = () => {

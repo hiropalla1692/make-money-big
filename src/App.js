@@ -6,13 +6,15 @@ import MenuBar from './components/MenuBar';
 import Overview from './components/Overview';
 import { fetchData, fetchQuarterData } from './api';
 import styled, {css} from 'styled-components';
+import LogoImage from './MMB_LOGO.png';
+import DrakeMeme from './drakememe_mmb.jpg';
 
 import './App.css';
 
 const Wrapper = styled.div`
   text-align: center;
-  background-color: #313896;
   display: flex;
+  height: 100%;
   flex-direction: row nowrap;
 `
 
@@ -39,7 +41,7 @@ const Widget = styled.div`
 `
 
 const Logo = styled.div`
-  margin: 0;
+  margin: 5%;
   flex: 0 1 15%;
   text-align: center;
    div {
@@ -50,6 +52,7 @@ const Logo = styled.div`
 `
 const Search = styled.div`
   flex: 0 1 15%;
+  margin: 5%;
   text-align: center;
 `
 const Menu = styled.div`
@@ -60,8 +63,9 @@ const Menu = styled.div`
 const Contents = styled.div`
   flex: 0 1 80%;
   display: flex;
+  min-height: 100%;
+  padding: 5% 0 5% 0;
   flex-flow: column nowrap;
-  justify-content: center;
   width: 100%;
   background-color: #f5f3f0;
 `
@@ -113,9 +117,9 @@ class App extends React.Component {
         <SideBar>
           <Widget>
             <Logo>
-              <div>
-                MakeMoneyBig.
-              </div>
+              <Link to="/">
+                <img border="0" src={LogoImage} width="64" height="64" alt="ロゴ"></img>
+              </Link>
             </Logo>
             <Search>
               <input type="text" placeholder="ex. AAPL" value={this.state.value} onChange={this.handleChange}/>
@@ -130,7 +134,19 @@ class App extends React.Component {
           {stockInfo.length ? <Overview stockProfile={stockProfile} stockHistoricalPrice={stockHistoricalPrice}/> : null }
           <Switch>
             <Route path="/" exact>
-              <div>hi</div>
+              {stockInfo.length ? 
+                (
+                  <IncomeStatement 
+                  stockInfo={stockInfo}
+                  changePeriod = {this.changePeriod}
+                  />
+                ) 
+                : (
+                  <div>
+                    <h1>MAKE MONEY BIG satisfies him.</h1>
+                    <img src={DrakeMeme} width="532" height="512" alt="ドレイク"></img>
+                  </div>
+                ) }
             </Route>
             <Route path="/pl" >
               <IncomeStatement 
