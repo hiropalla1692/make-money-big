@@ -1,18 +1,21 @@
 body {
-  background-color: #313896;
+  background-color: #315689;
 }
 
 .App {
   text-align: center;
   position: relative;
-  background-color: #313896;
-  min-height: 100vh;
+  background-color: #315689;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.recharts-brush {
+  font-size: calc(4px + 1vmin);
 }
 
 

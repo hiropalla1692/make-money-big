@@ -4,21 +4,33 @@ require('dotenv').config();
 const url = 'https://financialmodelingprep.com/api/v3';
 const apikey = process.env.REACT_APP_API_KEY;
 
+var yesterday = new Date();
+yesterday.setDate(yesterday.getDate() - 1);
+var yesterdayForApi = yesterday.getFullYear() + "-" +  (yesterday.getMonth()+ 1) + "-" + yesterday.getDate();
+
+var fiveYearsAgo = new Date();
+fiveYearsAgo.setDate(fiveYearsAgo.getDate() - 1824);
+var fiveYearsAgoForApi = fiveYearsAgo.getFullYear() + "-" +  (fiveYearsAgo.getMonth()+ 1) + "-" + fiveYearsAgo.getDate();
+
 export const fetchData = async (e) => {
 
-  const [firstResponse, secondResponse] = await Promise.all([
-    axios.get(`${url}/profile/${e}?apikey=${apikey}`),
-    axios.get(`${url}/income-statement/${e}?limit=10&apikey=${apikey}`)
+  const [firstResponse, secondResponse, thirdResponse ] = await Promise.all([
+    axios.get(`${url}/quote/${e}?apikey=${apikey}`),
+    axios.get(`${url}/income-statement/${e}?limit=10&apikey=${apikey}`),
+    axios.get(`${url}/historical-price-full/${e}?from=${fiveYearsAgoForApi}&to=${yesterdayForApi}&apikey=${apikey}`)
   ]);
-  console.log(secondResponse.data);
+  console.log(thirdResponse.data);
   const profile = firstResponse.data.map((profileInfo) => ({
     symbol: profileInfo.symbol,
+    name: profileInfo.name,
     price: profileInfo.price,
-    beta: profileInfo.beta,
-    companyName: profileInfo.companyName,
-    industry: profileInfo.industry,
-    sector: profileInfo.sector,
-    website: profileInfo.website
+    changesPercentage: profileInfo.changesPercentage,
+    change: profileInfo.change,
+    yearHigh: profileInfo.yearHigh,
+    yearLow: profileInfo.yearLow,
+    exchange: profileInfo.exchange,
+    eps: Math.round(profileInfo.eps * 100) / 100,
+    pe: Math.round(profileInfo.pe * 100) / 100,
   }))
 
   const modifiedPlData = secondResponse.data.map((plInfo) => ({
@@ -41,7 +53,15 @@ export const fetchData = async (e) => {
     weightedAverageShsOutDil: plInfo.weightedAverageShsOutDil/1000000,
   }))
 
-  return [modifiedPlData, profile];
+  const historicalPrice = thirdResponse.data.historical.map((dailyPrice) => ({
+    price: dailyPrice.close,
+    date: dailyPrice.date.split('-'),
+    volume: dailyPrice.volume,
+  }))
+
+
+
+  return [modifiedPlData, profile, historicalPrice];
 }
 
 export const fetchProfitData = async (e) => {

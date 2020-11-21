@@ -19,12 +19,6 @@ const MenuBar = () => {
   return (
     <Container>
       <Menu>
-        <Link to="/val">Valuation</Link>
-      </Menu>
-      <Menu>
-        <Link to="/profit">Profitability</Link>
-      </Menu>
-      <Menu>
         <Link to="/pl">Income Statement</Link>
       </Menu>
       <Menu>
@@ -32,6 +26,12 @@ const MenuBar = () => {
       </Menu>
       <Menu>
         <Link to="/cs">Cash Flow Statement</Link>
+      </Menu>
+      <Menu>
+        <Link to="/val">Valuation</Link>
+      </Menu>
+      <Menu>
+        <Link to="/profit">Profitability</Link>
       </Menu>
     </Container>
   )

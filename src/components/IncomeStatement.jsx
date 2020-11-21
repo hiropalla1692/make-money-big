@@ -14,7 +14,7 @@ const Container = styled.div`
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  color: #313896;
+  color: #303037;
   font-family: 'Source Sans Pro', sans-serif;
   p {
     text-align: right;
@@ -25,7 +25,7 @@ const Container = styled.div`
 const About = styled.div`
   padding: 4%;
   text-align: left;
-  color: #313896;
+  color: #303037;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: bold;
   font-size: 15px;
@@ -45,7 +45,7 @@ const Items = styled.div`
   height: 50vh;
   padding: 2%;
   margin-bottom: 2%;
-  background-color: #f8f8fc;
+  background-color: #fcfbf8;
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
@@ -73,7 +73,7 @@ const Box = styled.div`
   display: flex;
   height: 100%;
   align-items: center;
-  background-color: #f8f8fc;
+  background-color: transparent;
   color: #303037;
   flex-flow: row wrap;
   ${props => props.main && css`
@@ -91,9 +91,9 @@ const Item = styled.div`
   width: 100%;
   border-radius: 10px;
   align-items: center;
-  box-shadow: 
-    0 1.9px 5px rgba(238,239,247);
-  background-color: white;
+  /* box-shadow: 
+    0 1.9px 5px rgba(238,239,247); */
+  background-color: transparent;
 
   h5 {
     margin: 2% 0 1% 0;
@@ -165,20 +165,20 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
 
   const chartColor = [
     {
-      one: "#313896",
-      two: "#626ec3",
-      three: "#a2aadc",
-      four: "#c7cbea"
+      one: "#643189",
+      two: "#a158b1",
+      three: "#c89ad2",
+      four: "#ddc2e3"
     }, {
-      one: "#7f2392",
-      two: "#ad4aae",
-      three: "#d094cf",
-      four: "#e2bee2"
+      one: "#af395f",
+      two: "#ed486d",
+      three: "#f79ab5",
+      four: "#f9c1d2"
     }, {
-      one: "#369223",
-      two: "#67bf57",
-      three: "#a7d89e",
-      four: "#c9e7c4"
+      one: "#af8738",
+      two: "#f2c85e",
+      three: "#fade9b",
+      four: "#fdeac2"
     }
   ]
 
@@ -219,8 +219,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                           top: 5, right: 25, left: 0, bottom: 5,
                         }}
                       >
-                        <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                        <YAxis unit={profitStructureData[4]} tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                        <YAxis unit={profitStructureData[4]} tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                         <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
                         <Area type="monotone" fillOpacity="1" dataKey={profitStructureData[0]} stackId="1" stroke={chartColor[0].four} fill={chartColor[0].four} />
                         <Area type="monotone" fillOpacity="1" dataKey={profitStructureData[1]} stackId="1" stroke={chartColor[0].three} fill={chartColor[0].three} />
@@ -240,8 +240,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                             top: 5, right: 25, left: 0, bottom: 5,
                           }}
                         >
-                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                          <YAxis color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                          <YAxis color="#8884d8" tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                           <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
                           <Bar dataKey="revenue" fill={chartColor[0].one} />
                         </BarChart>
@@ -256,8 +256,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                             top: 5, right: 25, left: 0, bottom: 5,
                           }}
                         >
-                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                          <YAxis unit={profitStructureData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                          <YAxis unit={profitStructureData[4]} color="#303037" tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                           <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
                           <Bar dataKey={profitStructureData[5]} fill={chartColor[0].two} />
                         </BarChart>
@@ -272,8 +272,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                             top: 5, right: 25, left: 0, bottom: 5,
                           }}
                         >
-                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                          <YAxis unit={profitStructureData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                          <YAxis unit={profitStructureData[4]} color="#8884d8" tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                           <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                           <Bar dataKey={profitStructureData[6]} fill={chartColor[0].three} />
                         </BarChart>
@@ -288,8 +288,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                           top: 5, right: 25, left: 0, bottom: 5,
                         }}
                       >
-                        <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                        <YAxis unit={profitStructureData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                        <YAxis unit={profitStructureData[4]} color="#8884d8" tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                         <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                         <Bar dataKey={profitStructureData[7]} fill={chartColor[0].four} />
                       </BarChart>
@@ -314,8 +314,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                           top: 5, right: 25, left: 0, bottom: 5,
                         }}
                       >
-                        <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                        <YAxis unit={operatingExpenseStructureData[3]} tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                        <YAxis unit={operatingExpenseStructureData[3]} tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                         <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
                         <Area type="monotone" fillOpacity="1" dataKey={operatingExpenseStructureData[1]} stackId="1" stroke={chartColor[1].three} fill={chartColor[1].three} />
                         <Area type="monotone" fillOpacity="1" dataKey={operatingExpenseStructureData[0]} stackId="1" stroke={chartColor[1].one} fill={chartColor[1].one} />
@@ -333,10 +333,10 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                           top: 5, right: 25, left: 0, bottom: 5,
                         }}
                       >
-                        <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                        <YAxis unit="%" color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                        <YAxis unit="%" color="#8884d8" tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                         <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                        <Line stroke="#7f2392" dataKey="operatingExpenseR" fill="#7f2392" />
+                        <Line stroke={chartColor[1].one} dataKey="operatingExpenseR" fill={chartColor[1].one} />
                       </LineChart>
                     </ResponsiveContainer>
                   </Item>
@@ -349,8 +349,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                             top: 5, right: 25, left: 0, bottom: 5,
                           }}
                         >
-                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                          <YAxis unit={operatingExpenseStructureData[3]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                          <YAxis unit={operatingExpenseStructureData[3]} color="#8884d8" tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                           <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
                           <Bar dataKey={operatingExpenseStructureData[0]} fill={chartColor[1].one} />
                         </BarChart>
@@ -365,8 +365,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                             top: 5, right: 25, left: 0, bottom: 5,
                           }}
                         >
-                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                          <YAxis unit={operatingExpenseStructureData[3]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                          <YAxis unit={operatingExpenseStructureData[3]} color="#8884d8" tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                           <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
                           <Bar dataKey={operatingExpenseStructureData[1]} fill={chartColor[1].three} />
                         </BarChart>
@@ -381,8 +381,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                             top: 5, right: 25, left: 0, bottom: 5,
                           }}
                         >
-                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                          <YAxis unit={operatingExpenseStructureData[3]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                          <YAxis unit={operatingExpenseStructureData[3]} color="#8884d8" tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                           <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                           <Bar dataKey={operatingExpenseStructureData[2]} fill={chartColor[2].one} />
                         </BarChart>
@@ -408,8 +408,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                           top: 5, right: 25, left: 0, bottom: 5,
                         }}
                       >
-                        <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                        <YAxis unit={ebitdaData[4]} tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                        <YAxis unit={ebitdaData[4]} tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                         <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
                         <Area type="monotone" fillOpacity="1" dataKey={ebitdaData[0]} stackId="1" stroke={chartColor[2].four} fill={chartColor[2].four} />
                         <Area type="monotone" fillOpacity="1" dataKey={ebitdaData[1]} stackId="1" stroke={chartColor[2].three} fill={chartColor[2].three} />
@@ -429,8 +429,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                           top: 5, right: 25, left: 0, bottom: 5,
                         }}
                       >
-                        <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                        <YAxis unit="%" color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                        <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                        <YAxis unit="%" color="#8884d8" tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                         <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                         <Line stroke={chartColor[2].one} dataKey="ebitdaR" fill={chartColor[2].one} />
                       </LineChart>
@@ -445,8 +445,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                             top: 5, right: 25, left: 0, bottom: 5,
                           }}
                         >
-                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                          <YAxis unit={ebitdaData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                          <YAxis unit={ebitdaData[4]} color="#8884d8" tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                           <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
                           <Bar dataKey={ebitdaData[3]} fill={chartColor[2].one} />
                         </BarChart>
@@ -461,8 +461,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                             top: 5, right: 25, left: 0, bottom: 5,
                           }}
                         >
-                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                          <YAxis unit={ebitdaData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                          <YAxis unit={ebitdaData[4]} color="#8884d8" tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                           <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
                           <Bar dataKey={ebitdaData[2]} fill={chartColor[2].two} />
                         </BarChart>
@@ -477,8 +477,8 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                             top: 5, right: 25, left: 0, bottom: 5,
                           }}
                         >
-                          <XAxis dataKey="name" tick={{ fill: '#313896' , fontSize: 15}}/>
-                          <YAxis unit={ebitdaData[4]} color="#8884d8" tick={{ fill: '#313896' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <XAxis dataKey="name" tick={{ fill: '#303037' , fontSize: 15}}/>
+                          <YAxis unit={ebitdaData[4]} color="#8884d8" tick={{ fill: '#303037' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                           <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                           <Bar dataKey={ebitdaData[1]} fill={chartColor[2].three} />
                         </BarChart>
