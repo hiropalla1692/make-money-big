@@ -78,6 +78,7 @@ const Menu = styled.div`
   z-index: 10;
 
   @media screen and (max-width:768px) {
+  display: none;
   position: absolute;
   flex-direction: column;
   justify-content: flex-start;
@@ -91,6 +92,7 @@ const Menu = styled.div`
   transition: transform 0.3s ease-in;
   &.nav-active {
     transform: translateX(0%);
+    display: block;
   }
 }
 `
