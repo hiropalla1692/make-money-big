@@ -9,15 +9,22 @@ const Container = styled.div`
 display: flex;
 flex-flow: row nowrap;
 width: 90%;
-height: 25vh;
+height: 30vh;
 margin: 2% auto;
 border-radius: 10px;
 font-family: 'Poppins', sans-serif;
 font-size: calc(8px + 2vmin);
+  @media screen and (max-width:768px) {
+    height: 60vh;
+    flex-flow: column nowrap;
+  }
 `
 
 const Chart = styled.div`
 flex: 0 1 40%;
+  @media screen and (max-width:768px) {
+    flex: 0 1 50%;
+  }
 `
 
 const Info = styled.div`
@@ -27,6 +34,10 @@ padding: 1.5% 3%;
 flex-flow: column nowrap;
 border: solid 3px #315689;
 border-radius: 1px;
+  @media screen and (max-width:768px) {
+    flex: 0 1 40%;
+    margin-bottom: 5%;
+  }
 `
 const Main = styled.div`
 width: 100%;
@@ -37,23 +48,24 @@ align-items: center;
 `
 const Sub = styled.div`
 flex: 0 1 50%;
-font-size: calc(1px + 2vmin);
 display: flex;
 flex-flow: row nowrap;
+font-size: calc(1px + 2vmin);
+  @media screen and (max-width:768px) {
+    font-size: calc(4px + 2vmin);
+  }
 `
 
 const SubBox = styled.div`
 height: 100%;
 margin: 0 3% 0 3%;
 flex: 0 1 50%;
-font-size: calc(1px + 2vmin);
 display: flex;
 flex-flow: column nowrap;
 align-items: center;
 `
 const SubContent = styled.div`
 width: 100%;
-font-size: calc(1px + 2vmin);
 text-align: left;
 display: flex;
 justify-content: space-between;
@@ -101,11 +113,7 @@ const Content = styled.div`
 const StyledBrush = styled.div`
 font-size: 10px;
 `
-const customTickFormatter = () => {
-      return (<StyledBrush>
-                <Brush dataKey="date" height={30} stroke="#efbb32"/>
-              </StyledBrush>)
-    }
+
 
 const Overview = ({ stockProfile, stockHistoricalPrice }) => {
 
@@ -125,22 +133,6 @@ const Overview = ({ stockProfile, stockHistoricalPrice }) => {
     stockProfile.length
     ? (
       <Container>
-        <Chart>
-        <ResponsiveContainer width="95%" height="100%">
-          <AreaChart
-            data={priceData}
-            margin={{
-              top: 0, right: 0, left: 0, bottom: 0,
-            }}
-          >
-            <XAxis dataKey="date" tick={{ fill: '#303037' , fontSize: 10}}/>
-            <YAxis  color="#303037" tick={{ fill: '#303037' , fontSize: 10}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-            <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
-            <Area dataKey="price" dot={false} type="monotone" fillOpacity="0.6" stroke="#efbb32" fill="#efbb32"/>
-            <Brush dataKey="date" height={15} stroke="#315689"/>
-          </AreaChart>
-        </ResponsiveContainer>
-        </Chart>
         <Info>
           <Main>
             <Contents>
@@ -183,6 +175,22 @@ const Overview = ({ stockProfile, stockHistoricalPrice }) => {
             </SubBox>
           </Sub>
         </Info>
+        <Chart>
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            data={priceData}
+            margin={{
+              top: 0, right: 0, left: -20, bottom: 0,
+            }}
+          >
+            <XAxis dataKey="date" tick={{ fill: '#303037' , fontSize: 10}}/>
+            <YAxis  color="#303037" tick={{ fill: '#303037' , fontSize: 10}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+            <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+            <Area dataKey="price" dot={false} type="monotone" fillOpacity="0.6" stroke="#efbb32" fill="#efbb32"/>
+            <Brush dataKey="date" height={15} stroke="#315689"/>
+          </AreaChart>
+        </ResponsiveContainer>
+        </Chart>
       </Container>
     ) : null
   )

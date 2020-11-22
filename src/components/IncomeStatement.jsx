@@ -49,6 +49,9 @@ const Items = styled.div`
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
+  @media screen and (max-width:768px) {
+    height: 150vh;
+  }
 `
 
 const Boxes = styled.div`
@@ -56,6 +59,9 @@ const Boxes = styled.div`
   flex-flow: row nowrap;
   height: 90%;
   width: 100%;
+  @media screen and (max-width:768px) {
+    flex-flow: column nowrap;
+  }
 `
 const Title = styled.div`
   display: flex;
@@ -69,6 +75,7 @@ const Title = styled.div`
   font-size: calc(2px + 2vmin);
   font-weight: bold;
 `
+
 const Box = styled.div`
   display: flex;
   height: 100%;
@@ -83,6 +90,19 @@ const Box = styled.div`
   ${props => props.sub && css`
     width: 60%;
   `}
+
+  @media screen and (max-width:768px) {
+    ${props => props.main && css`
+        width: 100%;
+        height: 25%;
+        margin-right: 1%;
+    `}
+    ${props => props.sub && css`
+        width: 100%;
+        height: 75%;
+        flex-flow: column nowrap;
+    `}
+  }
 `
 const Item = styled.div`
   display: flex;
@@ -91,30 +111,25 @@ const Item = styled.div`
   width: 100%;
   border-radius: 10px;
   align-items: center;
-  /* box-shadow: 
-    0 1.9px 5px rgba(238,239,247); */
   background-color: transparent;
-
+  z-index: 1;
   h5 {
     margin: 2% 0 1% 0;
   }
-
   ${props => props.mini && css`
     margin: 0.5% 0.5% 0 0;
     height: 49%;
     width: 49%;
   `}
+
+  @media screen and (max-width:768px) {
+    ${props => props.mini && css`
+      height: 100%;
+      width: 100%;
+  `}
+  }
+  
 `
-// const Item = styled.div`
-//   margin: 0.5% 0.5% 0 0;
-//   height: 49%;
-//   width: 49%;
-//   border-radius: 10px;
-//   align-items: center;
-//   box-shadow: 
-//     0 1.9px 5px rgba(238,239,247);
-//   background-color: white;
-// `
 
 const IncomeStatement = ({ stockInfo, changePeriod }) => {
   const data = 

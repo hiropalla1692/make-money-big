@@ -15,13 +15,25 @@ const Wrapper = styled.div`
   text-align: center;
   display: flex;
   height: 100%;
-  flex-direction: row nowrap;
+  flex-flow: row nowrap;
+
+  img {
+    max-width: 80%;
+    height: auto;
+  }
+
+  @media screen and (max-width:768px) {
+  flex-flow: column nowrap;
+  }
 `
 
 const SideBar = styled.div`
   flex: 0 1 20%;
   text-align: center;
   background-color: #315689;
+  @media screen and (max-width:768px) {
+    flex: 0 1 15%;
+  }
 `
 const Widget = styled.div`
   position: sticky;
@@ -38,6 +50,10 @@ const Widget = styled.div`
     color: white;
     text-decoration: none;
   }
+
+  @media screen and (max-width:768px) {
+  flex-flow: row nowrap;
+  }
 `
 
 const Logo = styled.div`
@@ -52,12 +68,55 @@ const Logo = styled.div`
 `
 const Search = styled.div`
   flex: 0 1 15%;
-  margin: 5%;
+  margin: 2%;
   text-align: center;
 `
+
 const Menu = styled.div`
   flex: 0 1 70%;
   text-align: center;
+  z-index: 10;
+
+  @media screen and (max-width:768px) {
+  position: absolute;
+  flex-direction: column;
+  justify-content: flex-start;
+  right: 0px;
+  top: 100%;
+  height: 100vh;
+  opacity: 0.8;
+  width: 100%;
+  background-color: black;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in;
+  &.nav-active {
+    transform: translateX(0%);
+  }
+}
+`
+const MenuBurger = styled.div`
+  display: none;
+  margin: 3%;
+  div {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 5px;
+  }
+  @media screen and (max-width:768px) {
+  display: block;
+  cursor: pointer;
+}
+`
+const Line = styled.div`
+  @keyframes Rotate {
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+  };
 `
 
 const Contents = styled.div`
@@ -87,6 +146,8 @@ class App extends React.Component {
   }
 
   searchSymbol = async () => {
+    const menu = document.querySelector('#b')
+    menu.classList.toggle('nav-active');
     const searchword = this.state.value
     const fetchedData = await fetchData(searchword);
     this.setState({stockInfo: fetchedData[0]});
@@ -109,6 +170,30 @@ class App extends React.Component {
     }
   }
 
+  navSlide = () => {
+    const menu = document.querySelector('#b')
+    const menuLists = document.querySelectorAll('li')
+    const burgers = document.querySelectorAll('.burger')
+  
+    menu.classList.toggle('nav-active');
+  
+    burgers.forEach((burger) => {
+      if (burger.style.animation) {
+        burger.style.animation = '';
+      } else {
+        burger.style.animation = 'Rotate 0.6s ease forwards';
+      }
+    });
+  
+    menuLists.forEach((list, index) => {
+      if (list.style.animation) {
+        list.style.animation = '';
+      } else {
+        list.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 +0.4}s`
+      }
+    });
+  };
+
   render() {
   const { stockInfo, stockProfile, stockHistoricalPrice } = this.state;
   return (
@@ -121,11 +206,16 @@ class App extends React.Component {
                 <img border="0" src={LogoImage} width="64" height="64" alt="ロゴ"></img>
               </Link>
             </Logo>
-            <Search>
-              <input type="text" placeholder="ex. AAPL" value={this.state.value} onChange={this.handleChange}/>
-              <button onClick={this.searchSymbol}>search</button>
-            </Search>
-            <Menu>
+            <MenuBurger id="a" onClick={this.navSlide}>
+              <Line className="burger"></Line>
+              <Line className="burger"></Line>
+              <Line className="burger"></Line>
+            </MenuBurger>
+            <Menu id="b">
+              <Search>
+                <input type="text" placeholder="ex. AAPL" value={this.state.value} onChange={this.handleChange}/>
+                <button onClick={this.searchSymbol}>search</button>
+              </Search>
               <MenuBar/>
             </Menu>
           </Widget>

@@ -12,7 +12,10 @@ const Container = styled.div`
   font-size: calc(2px + 2vmin);
 `
 const Menu = styled.div`
-  margin-bottom: 20%;
+  margin: 5% 0 5% 0;
+  @media screen and (max-width:768px) {
+    font-size: calc(4px + 3vmin);
+  }
 `
 
 const MenuBar = () => {
