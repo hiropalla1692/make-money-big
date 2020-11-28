@@ -112,7 +112,6 @@ const Item = styled.div`
   border-radius: 10px;
   align-items: center;
   background-color: transparent;
-  z-index: 1;
   h5 {
     margin: 2% 0 1% 0;
   }
@@ -128,7 +127,6 @@ const Item = styled.div`
       width: 100%;
   `}
   }
-  
 `
 
 const IncomeStatement = ({ stockInfo, changePeriod }) => {

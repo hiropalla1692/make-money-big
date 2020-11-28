@@ -24,6 +24,7 @@ export const fetchData = async (e) => {
     symbol: profileInfo.symbol,
     name: profileInfo.name,
     price: profileInfo.price,
+    marketCap: profileInfo.marketCap,
     changesPercentage: profileInfo.changesPercentage,
     change: profileInfo.change,
     yearHigh: profileInfo.yearHigh,
@@ -59,8 +60,6 @@ export const fetchData = async (e) => {
     volume: dailyPrice.volume,
   }))
 
-
-
   return [modifiedPlData, profile, historicalPrice];
 }
 
@@ -72,6 +71,21 @@ export const fetchProfitData = async (e) => {
     totalStockholdersEquity: bsInfo.totalStockholdersEquity/1000000,
   }))
   return modifiedBsData;
+}
+
+export const fetchCfsData = async (e) => {
+  const { data } = await axios.get(`${url}/cash-flow-statement/${e}?apikey=${apikey}&limit=10`);
+  const modifiedCfsData = data.map((cfsInfo) => ({
+    date: cfsInfo.date,
+    operatingCashFlow: cfsInfo.operatingCashFlow/1000000,
+    capitalExpenditure: Math.abs(cfsInfo.capitalExpenditure/1000000),
+    freeCashFlow: cfsInfo.freeCashFlow/1000000,
+    acquisitionsNet: - cfsInfo.acquisitionsNet/1000000,
+    debtRepayment: - cfsInfo.debtRepayment/1000000,
+    commonStockRepurchased: - cfsInfo.commonStockRepurchased/1000000,
+    dividendsPaid: - cfsInfo.dividendsPaid/1000000,
+  }))
+  return modifiedCfsData;
 }
 
 export const fetchQuarterData = async (e) => {

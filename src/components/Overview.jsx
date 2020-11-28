@@ -3,11 +3,13 @@ import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import {
   LineChart, Line, BarChart, Bar, AreaChart, Area, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Brush, ResponsiveContainer
 } from 'recharts';
-import styled, {css} from 'styled-components';
+import styled, {css, ThemeProvider} from 'styled-components';
+import theme from '../ColorChart';
 
 const Container = styled.div`
 display: flex;
 flex-flow: row nowrap;
+color: white;
 width: 90%;
 height: 30vh;
 margin: 2% auto;
@@ -22,6 +24,7 @@ font-size: calc(8px + 2vmin);
 
 const Chart = styled.div`
 flex: 0 1 40%;
+
   @media screen and (max-width:768px) {
     flex: 0 1 50%;
   }
@@ -32,7 +35,7 @@ flex: 0 1 60%;
 display: flex;
 padding: 1.5% 3%;
 flex-flow: column nowrap;
-border: solid 3px #315689;
+border: solid 3px ${props => props.theme.green};
 border-radius: 1px;
   @media screen and (max-width:768px) {
     flex: 0 1 40%;
@@ -90,9 +93,8 @@ h3 {
 h4 {
   display: inline;
   margin: 0;
-  color: gray;
   font-size: calc(2px + 2vmin);
-  color: #efbb32;
+  color:${props => props.theme.green};
 }
 `
 
@@ -110,12 +112,7 @@ const Content = styled.div`
   `}
 `
 
-const StyledBrush = styled.div`
-font-size: 10px;
-`
-
-
-const Overview = ({ stockProfile, stockHistoricalPrice }) => {
+const Overview = ({ stockInfo, stockProfile, stockHistoricalPrice }) => {
 
   const priceData = 
     stockHistoricalPrice.length 
@@ -129,9 +126,21 @@ const Overview = ({ stockProfile, stockHistoricalPrice }) => {
     }).reverse()
     : [];
 
+    const data = 
+    stockProfile.length 
+    ? stockInfo.map((each, index) => {
+      return (
+        {
+          psr: Math.round((stockProfile[0].marketCap/1000000) / each.revenue * 100) / 100,
+        }
+      )
+    })
+    : [];
+
   return (
     stockProfile.length
     ? (
+      <ThemeProvider theme={theme}>
       <Container>
         <Info>
           <Main>
@@ -161,6 +170,9 @@ const Overview = ({ stockProfile, stockHistoricalPrice }) => {
               <SubContent>
                 <span>year-low</span><span>${stockProfile[0].yearLow}</span>
               </SubContent>
+              <SubContent>
+                <span>Market Cap</span><span>${Math.round((stockProfile[0].marketCap/ 1000000000) * 100) / 100}B</span>
+              </SubContent>
             </SubBox>
             <SubBox>
               <SubContent>
@@ -170,28 +182,29 @@ const Overview = ({ stockProfile, stockHistoricalPrice }) => {
                 <span>PER</span><span>×{stockProfile[0].pe}</span>
               </SubContent>
               <SubContent>
-                <span>PSR</span><span>{stockProfile[0].pe}</span>
+                <span>PSR</span><span>×{data[0].psr}</span>
               </SubContent>
             </SubBox>
           </Sub>
         </Info>
         <Chart>
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart
-            data={priceData}
-            margin={{
-              top: 0, right: 0, left: -20, bottom: 0,
-            }}
-          >
-            <XAxis dataKey="date" tick={{ fill: '#303037' , fontSize: 10}}/>
-            <YAxis  color="#303037" tick={{ fill: '#303037' , fontSize: 10}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-            <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
-            <Area dataKey="price" dot={false} type="monotone" fillOpacity="0.6" stroke="#efbb32" fill="#efbb32"/>
-            <Brush dataKey="date" height={15} stroke="#315689"/>
-          </AreaChart>
-        </ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart
+              data={priceData}
+              margin={{
+                top: 0, right: 0, left: -20, bottom: 0,
+              }}
+            >
+              <XAxis dataKey="date" tick={{ fill: '#303037' , fontSize: 10}}/>
+              <YAxis  color="#303037" tick={{ fill: '#303037' , fontSize: 10}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+              <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+              <Area dataKey="price" dot={false} type="monotone" fillOpacity="0.8" stroke={theme.green} fill={theme.green}/>
+              <Brush dataKey="date" height={15} stroke="#656565"/>
+            </AreaChart>
+          </ResponsiveContainer>
         </Chart>
       </Container>
+      </ThemeProvider>
     ) : null
   )
 }

@@ -1,11 +1,11 @@
 body {
-  background-color: #315689;
+  background-color: #202125;
 }
 
 .App {
   text-align: center;
   position: relative;
-  background-color: #315689;
+  background-color: #202125;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,6 +16,10 @@ body {
 
 .recharts-brush {
   font-size: calc(4px + 1vmin);
+}
+
+.recharts-surface {
+  z-index: 0 !important;
 }
 
 

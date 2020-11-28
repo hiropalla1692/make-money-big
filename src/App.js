@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import IncomeStatement from './components/IncomeStatement';
 import Profitability from './components/Profitability';
+import CashFlowStatement from './components/CashFlowStatement';
 import MenuBar from './components/MenuBar';
 import Overview from './components/Overview';
 import { fetchData, fetchQuarterData } from './api';
-import styled, {css} from 'styled-components';
+import styled, {css, ThemeProvider} from 'styled-components';
 import LogoImage from './MMB_LOGO.png';
+import theme from './ColorChart';
 import DrakeMeme from './drakememe_mmb.jpg';
 
 import './App.css';
@@ -16,21 +18,19 @@ const Wrapper = styled.div`
   display: flex;
   height: 100%;
   flex-flow: row nowrap;
-
   img {
     max-width: 80%;
     height: auto;
   }
-
   @media screen and (max-width:768px) {
   flex-flow: column nowrap;
   }
 `
-
 const SideBar = styled.div`
   flex: 0 1 20%;
   text-align: center;
-  background-color: #315689;
+  min-height: 100vh;
+  background-color: ${props => props.theme.light_dark};
   @media screen and (max-width:768px) {
     flex: 0 1 15%;
   }
@@ -60,6 +60,7 @@ const Logo = styled.div`
   margin: 5%;
   flex: 0 1 15%;
   text-align: center;
+
    div {
      padding: 1vh;
      border-radius: 8px;
@@ -68,19 +69,49 @@ const Logo = styled.div`
 `
 const Search = styled.div`
   flex: 0 1 15%;
-  margin: 2%;
+  margin: 12% 4% 4% 4%;
   text-align: center;
+  display: flex;
+  flex-flow: nowrap;
+  justify-content: center;
+  input {
+    border-radius: 60px;
+    width: 80%;
+    padding: 8px 12px 8px 12px;
+    background-color: #a8aab2;
+    font-family: "Poppins";
+    -webkit-appearance: none;
+    border: none;
+    :focus {
+      outline: none;
+      box-shadow: 0 0 0 1px ${props => props.theme.red};
+    } 
+  }
+  button {
+    display: none;
+    border-radius: 60px;
+    padding: 4% 6% 4% 6%;
+    background-color: ${props => props.theme.red};
+    color: white;
+    font-family: "Poppins";
+    -webkit-appearance: none;
+    border: none;
+    :focus {
+    outline: none;
+    } 
+  }
 `
 
 const Menu = styled.div`
   flex: 0 1 70%;
   text-align: center;
-  z-index: 10;
 
   @media screen and (max-width:768px) {
   display: none;
   position: absolute;
+  z-index: 100;
   flex-direction: column;
+
   justify-content: flex-start;
   right: 0px;
   top: 100%;
@@ -91,8 +122,8 @@ const Menu = styled.div`
   transform: translateX(100%);
   transition: transform 0.3s ease-in;
   &.nav-active {
-    transform: translateX(0%);
     display: block;
+    transform: translateX(0%);
   }
 }
 `
@@ -127,8 +158,10 @@ const Contents = styled.div`
   min-height: 100%;
   padding: 5% 0 5% 0;
   flex-flow: column nowrap;
+  font-family: "Poppins";
   width: 100%;
-  background-color: #f5f3f0;
+  color: white;
+  background-color: ${props => props.theme.dark};
 `
 
 class App extends React.Component {
@@ -139,15 +172,16 @@ class App extends React.Component {
       stockInfo: [],
       stockProfile: {},
       stockHistoricalPrice: {},
-      menu: '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.searchSymbol = this.searchSymbol.bind(this);
+    this.resetSymbol = this.resetSymbol.bind(this);
     this.changePeriod = this.changePeriod.bind(this);
 
   }
 
-  searchSymbol = async () => {
+  searchSymbol = async (e) => {
+    e.preventDefault();
     const menu = document.querySelector('#b')
     menu.classList.toggle('nav-active');
     const searchword = this.state.value
@@ -155,6 +189,10 @@ class App extends React.Component {
     this.setState({stockInfo: fetchedData[0]});
     this.setState({stockProfile: fetchedData[1]});
     this.setState({stockHistoricalPrice: fetchedData[2]});
+  }
+
+  resetSymbol = () => {
+    this.setState({stockInfo:[]});
   }
 
   handleChange = (e) => {
@@ -174,7 +212,6 @@ class App extends React.Component {
 
   navSlide = () => {
     const menu = document.querySelector('#b')
-    const menuLists = document.querySelectorAll('li')
     const burgers = document.querySelectorAll('.burger')
   
     menu.classList.toggle('nav-active');
@@ -186,81 +223,81 @@ class App extends React.Component {
         burger.style.animation = 'Rotate 0.6s ease forwards';
       }
     });
-  
-    menuLists.forEach((list, index) => {
-      if (list.style.animation) {
-        list.style.animation = '';
-      } else {
-        list.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 +0.4}s`
-      }
-    });
   };
 
   render() {
   const { stockInfo, stockProfile, stockHistoricalPrice } = this.state;
   return (
     <BrowserRouter>
-      <Wrapper>
-        <SideBar>
-          <Widget>
-            <Logo>
-              <Link to="/">
-                <img border="0" src={LogoImage} width="64" height="64" alt="ロゴ"></img>
-              </Link>
-            </Logo>
-            <MenuBurger id="a" onClick={this.navSlide}>
-              <Line className="burger"></Line>
-              <Line className="burger"></Line>
-              <Line className="burger"></Line>
-            </MenuBurger>
-            <Menu id="b">
-              <Search>
-                <input type="text" placeholder="ex. AAPL" value={this.state.value} onChange={this.handleChange}/>
-                <button onClick={this.searchSymbol}>search</button>
-              </Search>
-              <MenuBar/>
-            </Menu>
-          </Widget>
-        </SideBar>
-        <Contents>
-          {stockInfo.length ? <Overview stockProfile={stockProfile} stockHistoricalPrice={stockHistoricalPrice}/> : null }
-          <Switch>
-            <Route path="/" exact>
-              {stockInfo.length ? 
-                (
-                  <IncomeStatement 
+      <ThemeProvider theme={theme}>
+        <Wrapper>
+          <SideBar>
+            <Widget>
+              <Logo onClick={this.resetSymbol}>
+                <Link to="/">
+                  <h3>makeMoneyBig.</h3>
+                </Link>
+              </Logo>
+              <MenuBurger id="a" onClick={this.navSlide}>
+                <Line className="burger"></Line>
+                <Line className="burger"></Line>
+                <Line className="burger"></Line>
+              </MenuBurger>
+              <Menu id="b">
+                <form onSubmit={this.searchSymbol}>
+                  <Search>
+                    <div>
+                      <input type="text" placeholder="ex. AAPL" value={this.state.value} onChange={this.handleChange} />
+                    </div>
+                    <div>
+                      <button type="submit">Search</button>
+                    </div>
+                  </Search>
+                </form>
+                <MenuBar />
+              </Menu>
+            </Widget>
+          </SideBar>
+          <Contents>
+            {stockInfo.length ? <Overview stockInfo={stockInfo} stockProfile={stockProfile} stockHistoricalPrice={stockHistoricalPrice}/> : null }
+            <Switch>
+              <Route path="/" exact>
+                {stockInfo.length ? 
+                  (
+                    <IncomeStatement 
+                    stockInfo={stockInfo}
+                    changePeriod = {this.changePeriod}
+                    />
+                  ) 
+                  : (
+                    <div>
+                      <h1>makeMoneyBig. satisfies you.</h1>
+                      <img src={DrakeMeme} width="532" height="512" alt="ドレイク"></img>
+                    </div>
+                  ) }
+              </Route>
+              <Route path="/pl" >
+                <IncomeStatement 
                   stockInfo={stockInfo}
                   changePeriod = {this.changePeriod}
-                  />
-                ) 
-                : (
-                  <div>
-                    <h1>MAKE MONEY BIG satisfies him.</h1>
-                    <img src={DrakeMeme} width="532" height="512" alt="ドレイク"></img>
-                  </div>
-                ) }
-            </Route>
-            <Route path="/pl" >
-              <IncomeStatement 
-                stockInfo={stockInfo}
-                changePeriod = {this.changePeriod}
-              />
-            </Route>
-            <Route path="/bs" >
-              <BalanceSheet/>
-            </Route>
-            <Route path="/cs" >
-              <CashFlowStatement/>
-            </Route>
-            <Route path="/val">
-              <Valuation />
-            </Route>
-            <Route path="/profit">
-              <Profitability stockInfo={stockInfo} />
-            </Route>
-          </Switch>
-        </Contents>
-      </Wrapper>
+                />
+              </Route>
+              <Route path="/bs" >
+                <BalanceSheet/>
+              </Route>
+              <Route path="/cs" >
+                <CashFlowStatement stockInfo={stockInfo}/>
+              </Route>
+              <Route path="/val">
+                <Valuation />
+              </Route>
+              <Route path="/profit">
+                <Profitability stockInfo={stockInfo} />
+              </Route>
+            </Switch>
+          </Contents>
+        </Wrapper>
+      </ThemeProvider>
     </BrowserRouter>
   )}
 };
@@ -271,10 +308,6 @@ function Valuation() {
 
 function BalanceSheet() {
   return <h2>B/Sだよ</h2>;
-}
-
-function CashFlowStatement() {
-  return <h2>C/Sだよ</h2>;
 }
 
 
