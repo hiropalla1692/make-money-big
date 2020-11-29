@@ -26,7 +26,7 @@ const Menu = styled.div`
   :hover {
     background-color: ${props => props.theme.dark};
     span {
-      color: ${props => props.theme.red};
+      color: ${props => props.theme.cfs1};
     }
   }
   @media screen and (max-width:768px) {
@@ -34,7 +34,7 @@ const Menu = styled.div`
   }
 `
 const current = {
-  color: '#f14666',
+  color: '#f8b5c1',
 };
 
 const MenuBar = ({ menuList }) => {

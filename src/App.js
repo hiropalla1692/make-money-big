@@ -8,6 +8,7 @@ import Overview from './components/Overview';
 import { fetchData, fetchQuarterData } from './api';
 import styled, {css, ThemeProvider} from 'styled-components';
 import LogoImage from './MMB_LOGO.png';
+import searchIcon from './search.svg';
 import theme from './ColorChart';
 import DrakeMeme from './drakememe_mmb.jpg';
 
@@ -33,6 +34,7 @@ const SideBar = styled.div`
   background-color: ${props => props.theme.light_dark};
   @media screen and (max-width:768px) {
     flex: 0 1 15%;
+    min-height: 10vh;
   }
 `
 const Widget = styled.div`
@@ -74,17 +76,26 @@ const Search = styled.div`
   display: flex;
   flex-flow: nowrap;
   justify-content: center;
+  span {
+    background-image: url(logomark.svg);
+    position: absolute;
+    display: flex;
+    padding: 4% 5%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
   input {
     border-radius: 60px;
-    width: 80%;
-    padding: 8px 12px 8px 12px;
+    width: 70%;
+    padding: 8px 12px 8px 36px;
     background-color: #a8aab2;
     font-family: "Poppins";
     -webkit-appearance: none;
     border: none;
     :focus {
       outline: none;
-      box-shadow: 0 0 0 1px ${props => props.theme.red};
+      box-shadow: 0 0 0 1.5px ${props => props.theme.cfs1};
     } 
   }
   button {
@@ -111,12 +122,11 @@ const Menu = styled.div`
   position: absolute;
   z-index: 100;
   flex-direction: column;
-
   justify-content: flex-start;
   right: 0px;
   top: 100%;
   height: 100vh;
-  opacity: 0.8;
+  opacity: 0.95;
   width: 100%;
   background-color: black;
   transform: translateX(100%);
@@ -162,6 +172,10 @@ const Contents = styled.div`
   width: 100%;
   color: white;
   background-color: ${props => props.theme.dark};
+  p {
+    text-align: left;
+    padding: 10%;
+  }
 `
 
 class App extends React.Component {
@@ -247,6 +261,9 @@ class App extends React.Component {
                 <form onSubmit={this.searchSymbol}>
                   <Search>
                     <div>
+                      <span><img src={searchIcon} width="18px"></img></span>
+                    </div>
+                    <div>
                       <input type="text" placeholder="ex. AAPL" value={this.state.value} onChange={this.handleChange} />
                     </div>
                     <div>
@@ -273,6 +290,16 @@ class App extends React.Component {
                     <div>
                       <h1>makeMoneyBig. satisfies you.</h1>
                       <img src={DrakeMeme} width="532" height="512" alt="ドレイク"></img>
+                      <p>
+                        makeMoneyBig. provides you with valuable visuals from financial data of individual firms, which helps you to instantly figure out what they really were, are and will be.<br></br>
+                        <br></br>
+                        There are three principles that I am guided by in making visuals from data.<br></br>
+                        1. Insightful🦍<br></br>
+                        2. Easy to understand🚿<br></br>
+                        3. Aesthetic🖼<br></br>
+                        <br></br>
+                        Let's dive in...
+                      </p>
                     </div>
                   ) }
               </Route>

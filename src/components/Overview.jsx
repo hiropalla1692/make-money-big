@@ -35,7 +35,7 @@ flex: 0 1 60%;
 display: flex;
 padding: 1.5% 3%;
 flex-flow: column nowrap;
-border: solid 3px ${props => props.theme.green};
+border: solid 3px ${props => props.theme.cfs1};
 border-radius: 1px;
   @media screen and (max-width:768px) {
     flex: 0 1 40%;
@@ -94,7 +94,7 @@ h4 {
   display: inline;
   margin: 0;
   font-size: calc(2px + 2vmin);
-  color:${props => props.theme.green};
+  color:${props => props.theme.cfs1};
 }
 `
 
@@ -195,10 +195,10 @@ const Overview = ({ stockInfo, stockProfile, stockHistoricalPrice }) => {
                 top: 0, right: 0, left: -20, bottom: 0,
               }}
             >
-              <XAxis dataKey="date" tick={{ fill: '#303037' , fontSize: 10}}/>
-              <YAxis  color="#303037" tick={{ fill: '#303037' , fontSize: 10}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+              <XAxis dataKey="date" tick={{ fill: 'white' , fontSize: 10}}/>
+              <YAxis  color="white" tick={{ fill: 'white' , fontSize: 10}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
               <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
-              <Area dataKey="price" dot={false} type="monotone" fillOpacity="0.8" stroke={theme.green} fill={theme.green}/>
+              <Area dataKey="price" dot={false} type="monotone" fillOpacity="0.8" stroke={theme.cfs1} fill={theme.cfs1}/>
               <Brush dataKey="date" height={15} stroke="#656565"/>
             </AreaChart>
           </ResponsiveContainer>

@@ -193,10 +193,10 @@ const CashFlowStatement = ({ stockInfo }) => {
                       <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
                       <Legend align="left"/>
                       <Area type="monotone" dataKey="operatingCashFlow"  fillOpacity="0.4" stroke={theme.pink} fill={theme.pink} />
-                      <Bar dataKey="capitalExpenditure" stackId="1"  fill={theme.red} />
-                      <Bar dataKey="acquisitionsNet" stackId="1"  fill={theme.pink} />
-                      <Bar dataKey="debtRepayment" stackId="1"  fill={theme.yellow} />
-                      <Bar dataKey="returnToShareholders" stackId="1"  fill={theme.green} />
+                      <Bar dataKey="capitalExpenditure" stackId="1"  fill={theme.cfs1} />
+                      <Bar dataKey="acquisitionsNet" stackId="1"  fill={theme.cfs2} />
+                      <Bar dataKey="debtRepayment" stackId="1"  fill={theme.cfs3} />
+                      <Bar dataKey="returnToShareholders" stackId="1"  fill={theme.cfs4} />
                       <Brush dataKey="name" height={15} stroke="#656565"/>
                     </ComposedChart>
                   </ResponsiveContainer>
@@ -232,8 +232,8 @@ const CashFlowStatement = ({ stockInfo }) => {
                         <XAxis dataKey="name" tick={{ fill: 'white' , fontSize: 15}}/>
                         <YAxis color="white" tick={{ fill: 'white' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                         <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
-                        <Bar dataKey="capitalExpenditure" stackId="1" fill={theme.red} />
-                        <Bar dataKey="freeCashFlow" stackId="1" fill={theme.yellow} />
+                        <Bar dataKey="capitalExpenditure" stackId="1" fill={theme.cfs1} />
+                        <Bar dataKey="freeCashFlow" stackId="1" fill={theme.cfs4} />
                       </BarChart>
                     </ResponsiveContainer>
                 </Item>
@@ -249,8 +249,8 @@ const CashFlowStatement = ({ stockInfo }) => {
                       <XAxis dataKey="name" tick={{ fill: 'white' , fontSize: 15}}/>
                       <YAxis color="white" tick={{ fill: 'white' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                       <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                      <Bar dataKey="dividendsPaid" stackId="1" fill={theme.green} />
-                      <Bar dataKey="commonStockRepurchased" stackId="1" fill={theme.dark_green} />
+                      <Bar dataKey="dividendsPaid" stackId="1" fill={theme.cfs4} />
+                      <Bar dataKey="commonStockRepurchased" stackId="1" fill={theme.cfs5} />
                     </BarChart>
                   </ResponsiveContainer>
                 </Item>
@@ -266,7 +266,7 @@ const CashFlowStatement = ({ stockInfo }) => {
                         <XAxis dataKey="name" tick={{ fill: 'white' , fontSize: 15}}/>
                         <YAxis color="white" tick={{ fill: 'white' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                         <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
-                        <Bar dataKey="debtRepayment" fill={chartColor[0].yellow} />
+                        <Bar dataKey="debtRepayment" fill={theme.cfs3} />
                       </BarChart>
                     </ResponsiveContainer>
                 </Item>
