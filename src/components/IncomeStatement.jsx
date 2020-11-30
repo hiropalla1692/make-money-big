@@ -130,10 +130,11 @@ const Item = styled.div`
   }
 `
 
-const IncomeStatement = ({ stockInfo, changePeriod }) => {
+const IncomeStatement = ({ stockInfo, changePeriod, keyMetrics }) => {
+
   const data = 
-    stockInfo.length 
-    ? stockInfo.map((each) => {
+    stockInfo.length && keyMetrics.length
+    ? stockInfo.map((each,index) => {
       return (
         {
           name: each.date[1] + "-" + each.date[0],
@@ -149,6 +150,9 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
           netIncomeR: each.netIncome*100 /each.revenue,
           eps: each.eps,
           weightedAverageShsOutDil: each.weightedAverageShsOutDil,
+          revenuePerShare: each.revenue / each.weightedAverageShsOutDil,
+          operatingCashFlowPerShare: keyMetrics[index].operatingCashFlowPerShare,
+          freeCashFlowPerShare: keyMetrics[index].freeCashFlowPerShare,
           costOfRevenueR: (each.costOfRevenue*100) / each.revenue,
           operatingExpenseR: (each.revenue - each.costOfRevenue - each.operatingIncome)*100 / each.revenue,
           nonOperatingExpenseR: (each.operatingIncome - each.netIncome)*100 / each.revenue,
@@ -408,7 +412,7 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
               </Items>
               <Items>
                 <Title>
-                  <div>■ EBITDA and Net Income&nbsp;&nbsp;</div>
+                  <div>■ Net Income → EBITDA&nbsp;&nbsp;</div>
                   {/* <button onClick={() => setIsOn(!isOn)}>push</button> */}
                   {/* <Toggle change={() => setIsOn(!isOn)}/> */}
                 </Title>
@@ -496,6 +500,99 @@ const IncomeStatement = ({ stockInfo, changePeriod }) => {
                             <YAxis unit={ebitdaData[4]} color="#8884d8" tick={{ fill: 'white' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                             <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
                             <Bar dataKey={ebitdaData[1]} fill={theme.ebitda3} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                    </Item>
+                  </Box>
+                </Boxes>
+              </Items>
+              <Items>
+                <Title>
+                  <div>■ EPS & other Per Share items &nbsp;&nbsp;</div>
+                  {/* <button onClick={() => setIsOn(!isOn)}>push</button> */}
+                  {/* <Toggle change={() => setIsOn(!isOn)}/> */}
+                </Title>
+                <Boxes>
+                  <Box main>
+                    <Item>
+                      <h5>Diluted Weighted Average Shares Outst.</h5>
+                      <ResponsiveContainer width="95%" height="95%">
+                        <BarChart
+                          data={data}
+                          margin={{
+                            top: 5, right: 25, left: 0, bottom: 5,
+                          }}
+                        >
+                          <XAxis dataKey="name" tick={{ fill: 'white' , fontSize: 15}}/>
+                          <YAxis tick={{ fill: 'white' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                          <Bar type="monotone" fillOpacity="0.8" dataKey="weightedAverageShsOutDil" fill={theme.eps1} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </Item>
+                  </Box>
+                  <Box sub>
+                    <Item mini>
+                      <h5>Diluted EPS</h5>
+                      <ResponsiveContainer width="95%" height="95%">
+                        <BarChart
+                          data={data}
+                          margin={{
+                            top: 5, right: 25, left: 0, bottom: 5,
+                          }}
+                        >
+                          <XAxis dataKey="name" tick={{ fill: 'white' , fontSize: 15}}/>
+                          <YAxis color="#8884d8" tick={{ fill: 'white' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                          <Bar dataKey="eps" fill={theme.eps1} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </Item>
+                    <Item mini>
+                      <h5>Revenue Per Share</h5>
+                        <ResponsiveContainer width="95%" height="95%">
+                          <BarChart
+                            data={data}
+                            margin={{
+                              top: 5, right: 25, left: 0, bottom: 5,
+                            }}
+                          >
+                            <XAxis dataKey="name" tick={{ fill: 'white' , fontSize: 15}}/>
+                            <YAxis color="#8884d8" tick={{ fill: 'white' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                            <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                            <Bar dataKey="revenuePerShare" fill={theme.eps2} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                    </Item>
+                    <Item mini>
+                      <h5>Operating Cash From Per Share</h5>
+                        <ResponsiveContainer width="95%" height="95%">
+                          <BarChart
+                            data={data}
+                            margin={{
+                              top: 5, right: 25, left: 0, bottom: 5,
+                            }}
+                          >
+                            <XAxis dataKey="name" tick={{ fill: 'white' , fontSize: 15}}/>
+                            <YAxis color="#8884d8" tick={{ fill: 'white' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                            <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)} />
+                            <Bar dataKey="operatingCashFlowPerShare" fill={theme.eps3} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                    </Item>
+                    <Item mini>
+                      <h5>Free Cash From Per Share</h5>
+                        <ResponsiveContainer width="95%" height="95%">
+                          <BarChart
+                            data={data}
+                            margin={{
+                              top: 5, right: 25, left: 0, bottom: 5,
+                            }}
+                          >
+                            <XAxis dataKey="name" tick={{ fill: 'white' , fontSize: 15}}/>
+                            <YAxis color="#8884d8" tick={{ fill: 'white' , fontSize: 15}} tickFormatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                            <Tooltip formatter={(value) => new Intl.NumberFormat('en').format(value)}/>
+                            <Bar dataKey="freeCashFlowPerShare" fill={theme.eps4} />
                           </BarChart>
                         </ResponsiveContainer>
                     </Item>

@@ -51,6 +51,9 @@ const MenuBar = ({ menuList }) => {
           <NavLink exact to="/cs" activeStyle={current}><span>Cash Flow Statement</span></NavLink>
         </Menu>
         <Menu>
+          <NavLink exact to="/div" activeStyle={current}><span>Dividends</span></NavLink>
+        </Menu>
+        <Menu>
           <NavLink exact to="/val" activeStyle={current}><span>Valuation</span></NavLink>
         </Menu>
         <Menu>

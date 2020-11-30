@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 import IncomeStatement from './components/IncomeStatement';
 import Profitability from './components/Profitability';
 import CashFlowStatement from './components/CashFlowStatement';
+import Dividends from './components/Dividends';
 import MenuBar from './components/MenuBar';
 import Overview from './components/Overview';
 import { fetchData, fetchQuarterData } from './api';
@@ -186,6 +187,7 @@ class App extends React.Component {
       stockInfo: [],
       stockProfile: {},
       stockHistoricalPrice: {},
+      keyMetrics: [],
     };
     this.handleChange = this.handleChange.bind(this);
     this.searchSymbol = this.searchSymbol.bind(this);
@@ -203,6 +205,7 @@ class App extends React.Component {
     this.setState({stockInfo: fetchedData[0]});
     this.setState({stockProfile: fetchedData[1]});
     this.setState({stockHistoricalPrice: fetchedData[2]});
+    this.setState({keyMetrics: fetchedData[3]});
   }
 
   resetSymbol = () => {
@@ -240,7 +243,7 @@ class App extends React.Component {
   };
 
   render() {
-  const { stockInfo, stockProfile, stockHistoricalPrice } = this.state;
+  const { stockInfo, stockProfile, stockHistoricalPrice, keyMetrics } = this.state;
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
@@ -282,8 +285,9 @@ class App extends React.Component {
                 {stockInfo.length ? 
                   (
                     <IncomeStatement 
-                    stockInfo={stockInfo}
-                    changePeriod = {this.changePeriod}
+                      stockInfo={stockInfo}
+                      changePeriod = {this.changePeriod}
+                      keyMetrics={keyMetrics}
                     />
                   ) 
                   : (
@@ -307,6 +311,7 @@ class App extends React.Component {
                 <IncomeStatement 
                   stockInfo={stockInfo}
                   changePeriod = {this.changePeriod}
+                  keyMetrics={keyMetrics}
                 />
               </Route>
               <Route path="/bs" >
@@ -314,6 +319,9 @@ class App extends React.Component {
               </Route>
               <Route path="/cs" >
                 <CashFlowStatement stockInfo={stockInfo}/>
+              </Route>
+              <Route path="/div" >
+                <Dividends stockInfo={stockInfo} keyMetrics={keyMetrics}/>
               </Route>
               <Route path="/val">
                 <Valuation />

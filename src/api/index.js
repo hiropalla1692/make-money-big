@@ -14,12 +14,13 @@ var fiveYearsAgoForApi = fiveYearsAgo.getFullYear() + "-" +  (fiveYearsAgo.getMo
 
 export const fetchData = async (e) => {
 
-  const [firstResponse, secondResponse, thirdResponse ] = await Promise.all([
+  const [firstResponse, secondResponse, thirdResponse, forthResponse ] = await Promise.all([
     axios.get(`${url}/quote/${e}?apikey=${apikey}`),
     axios.get(`${url}/income-statement/${e}?limit=10&apikey=${apikey}`),
-    axios.get(`${url}/historical-price-full/${e}?from=${fiveYearsAgoForApi}&to=${yesterdayForApi}&apikey=${apikey}`)
+    axios.get(`${url}/historical-price-full/${e}?from=${fiveYearsAgoForApi}&to=${yesterdayForApi}&apikey=${apikey}`),
+    axios.get(`${url}/key-metrics/${e}?limit=10&apikey=${apikey}`),
   ]);
-  console.log(thirdResponse.data);
+
   const profile = firstResponse.data.map((profileInfo) => ({
     symbol: profileInfo.symbol,
     name: profileInfo.name,
@@ -60,7 +61,15 @@ export const fetchData = async (e) => {
     volume: dailyPrice.volume,
   }))
 
-  return [modifiedPlData, profile, historicalPrice];
+  const keyMetrics = forthResponse.data.map((keyMetric) => ({
+    date: keyMetric.date.split('-'),
+    dividendYield: Math.round(keyMetric.dividendYield*100 * 100) / 100,
+    payoutRatio: Math.round(keyMetric.payoutRatio*100 * 100) / 100,
+    operatingCashFlowPerShare: Math.round(keyMetric.operatingCashFlowPerShare * 100) / 100,
+    freeCashFlowPerShare: Math.round(keyMetric.freeCashFlowPerShare * 100) / 100,
+  }))
+
+  return [modifiedPlData, profile, historicalPrice, keyMetrics];
 }
 
 export const fetchProfitData = async (e) => {
@@ -86,6 +95,20 @@ export const fetchCfsData = async (e) => {
     dividendsPaid: - cfsInfo.dividendsPaid/1000000,
   }))
   return modifiedCfsData;
+};
+
+export const fetchDivData = async (e) => {
+  try {
+    const { data } = await axios.get(`${url}/historical-price-full/stock_dividend/${e}?apikey=${apikey}`);
+    const modifiedDivData = data.historical.slice(0,39).map((divInfo) => ({
+      date: divInfo.date.split('-'),
+      adjDividend: divInfo.adjDividend,
+    }))
+    return modifiedDivData;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 }
 
 export const fetchQuarterData = async (e) => {

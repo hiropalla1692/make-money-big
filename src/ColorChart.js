@@ -28,6 +28,10 @@ const theme = {
     cfs3: "#eff2f8",
     cfs4: "#2b92e4",
     cfs5: "#1f72c4",
+    eps1: "#929532",
+    eps2: "#c7d960",
+    eps3: "#dde99f",
+    eps4: "#ebf1c4",
   }
 
 export default theme;
